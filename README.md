@@ -2,16 +2,18 @@
 
 A clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). No frameworks, no dependencies, no build steps. Just download and run.
 
+This project is vibe coded. The heavy lifting is done by LLMs with my oversight and extensive testing. It actually started as kind of a meme, to see how close I could get this dashboard to my previous setup with minimal prompting. To my surprise, the LLM got very close on the first try with an undetailed prompt, so I decided to take it further.
+
 ---
 
 ## Features
 
-- **Horizontal and vertical layout modes**: switch between a card-per-row grid or a traditional column layout
-- **24 themes**: 12 dark, 12 light, all with matching accents and grid colors
-- **Local icons**: download icons from [selfh.st/icons](https://selfh.st/icons) and drop them into `./site/icons/`. They are not distributed with Aerodash, but are freely available.
-- **Persistent settings**: all preferences saved to localStorage, restored on every load
-- **Options panel**: theme picker, grid toggle, glow intensity, layout mode, link behavior, column count, and card width, all in one flyout
-- **External config**: your services and bookmarks live in `config.js`, completely separate from the engine
+- **Horizontal & vertical layouts**: card-per-row grid or traditional columns
+- **24 themes**: 12 dark, 12 light, with matching accents and grid colors
+- **Local icons**: download from [selfh.st/icons](https://selfh.st/icons) and drop into `./site/icons/`
+- **Persistent settings**: all preferences saved to localStorage
+- **Options panel**: theme picker, grid, glow, layout, links, columns, and card width
+- **External config**: services and bookmarks live in `config.js`, never touch `index.html`
 
 ---
 
@@ -101,7 +103,7 @@ Bookmarks work the same as services — grouped, icon-supported, same fallback b
 
 ## Icons
 
-Icons are not distributed with Aerodash. Download them from **[selfh.st/icons](https://selfh.st/icons)** — a curated icon set for self-hosted apps available in webp, png, svg, and more.
+Icons are not distributed with Aerodash. Download them from **[selfh.st/icons](https://selfh.st/icons)**. This is a curated icon set for self-hosted apps available in webp, png, svg, and more.
 
 > Icons from selfh.st are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: [selfh.st/icons](https://selfh.st/icons).
 
@@ -130,9 +132,3 @@ All settings are saved to `localStorage` and restored on page load.
 | Links | new tab, same tab |
 | Card Cols | 1–10 |
 | Card Width | 10–20rem |
-
----
-
-## License
-
-MIT — do whatever you want with it.
