@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new" data-icons="on">
+<html lang="en" data-theme="dark" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new" data-icons="on" data-anim="on">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,12 +16,14 @@
     const gw = s.getItem('hp-glow');
     const lk = s.getItem('hp-links');
     const ic = s.getItem('hp-icons');
+    const an = s.getItem('hp-anim');
     if (t)  h.setAttribute('data-theme',  t);
     if (l)  h.setAttribute('data-layout', l);
     if (g)  h.setAttribute('data-grid',   g);
     if (gw) h.setAttribute('data-glow',   gw);
     if (lk) h.setAttribute('data-links',  lk);
     if (ic) h.setAttribute('data-icons',  ic);
+    if (an) h.setAttribute('data-anim',   an);
   })();
 </script>
 <style>
@@ -73,7 +75,7 @@
   }
   [data-grid="off"] body::before { opacity: 0; }
 
-  /* Glow */
+  /* ── GLOW ── */
   .glow {
     position: fixed; top: -12rem; left: 50%; transform: translateX(-50%);
     width: 37.5rem; height: 37.5rem; border-radius: 50%;
@@ -92,45 +94,68 @@
   .content { margin: 0 auto; }
 
   /* ── BOTTOMBAR ── */
-  .topbar {
+  .bottombar {
     display: flex; align-items: center; justify-content: center; gap: 0.6rem;
     padding: 0.7rem 1.5rem;
     border-top: 1px solid var(--border);
     margin-top: 2rem;
     transition: border-color 0.25s;
   }
+
+  /* ── TABBAR ── */
+  .tabbar {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.4rem;
+    transition: border-color 0.25s;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--muted); padding: 0.2rem 0.4rem; border-radius: 0.25rem;
+    transition: color 0.15s;
+  }
+  .tab-btn:hover { color: var(--accent2); }
+  .tab-btn.active { color: var(--text); }
   .ctrl-btn {
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     color: var(--muted); font-size: 0.82rem; line-height: 1;
     padding: 0.1rem 0.15rem; border-radius: 0.25rem;
-    transition: color 0.15s, transform 0.18s;
+    transition: color 0.15s;
   }
   .ctrl-btn:hover { color: var(--accent2); }
-  .vdivider { width: 1px; height: 0.85rem; background: var(--border); flex-shrink: 0; }
 
   /* ── OPTIONS FLYOUT ── */
   .options-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
   .options-flyout {
     position: absolute; bottom: calc(100% + 0.6rem); left: 50%; transform: translateX(-50%);
     background: var(--bg); border: 1px solid var(--border);
-    border-radius: 0.6rem; padding: 0.6rem 0.65rem;
+    border-radius: 0.6rem; padding: 0.6rem 0.8rem;
     display: flex; flex-direction: column; gap: 0.45rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     opacity: 0; pointer-events: none;
     transition: opacity 0.15s, transform 0.15s;
     transform: translateX(-50%) translateY(4px);
-    z-index: 200; min-width: 14rem;
+    z-index: 200; min-width: 16rem;
   }
   .options-flyout.open {
     opacity: 1; pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .options-flyout.flipped {
+    bottom: auto; top: calc(100% + 0.6rem);
+    transform: translateX(-50%) translateY(-4px);
+  }
+  .options-flyout.flipped.open {
     transform: translateX(-50%) translateY(0);
   }
   .opt-row { display: flex; align-items: center; gap: 0.4rem; }
   .opt-label {
     font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--muted);
-    min-width: 3.8rem; flex-shrink: 0;
+    width: 4.5rem; flex-shrink: 0;
   }
   .swatch-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
   .theme-wrap { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -144,7 +169,7 @@
   .swatch.active { border-color: #fff; }
   [data-theme^="light"] .swatch.active { border-color: #000; }
 
-  /* Flyout control buttons */
+  /* ── OPTIONS BUTTONS ── */
   .pal-btn {
     background: var(--surface); border: 1px solid var(--border);
     color: var(--muted); border-radius: 0.3rem;
@@ -155,7 +180,7 @@
   .pal-btn:hover { background: var(--surface-hover); color: var(--text); }
   .pal-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-  /* Inline slider in flyout */
+  /* ── OPTIONS SLIDERS ── */
   .opt-slider {
     -webkit-appearance: none; appearance: none;
     flex: 1; height: 3px; border-radius: 2px;
@@ -174,7 +199,8 @@
   }
   .opt-col-label {
     font-size: 0.62rem; color: var(--muted);
-    font-variant-numeric: tabular-nums; font-weight: 500; min-width: 0.8rem; text-align: right;
+    font-variant-numeric: tabular-nums; font-weight: 500;
+    width: 1.8rem; flex-shrink: 0; text-align: right;
   }
 
   :root { --card-w: 15rem; }
@@ -185,8 +211,8 @@
     color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; padding-left: 0.15rem;
   }
 
-  /* ── SERVICE CARDS ── */
-  .service-card {
+  /* ── SERVICE ITEMS ── */
+  .service-item {
     display: flex; align-items: center; gap: 0.6rem;
     width: var(--card-w); padding: 0.6rem 0.75rem; min-height: 3rem;
     background: var(--surface); border: 1px solid var(--border);
@@ -194,7 +220,7 @@
     white-space: nowrap; overflow: hidden;
     transition: background 0.15s, border-color 0.15s;
   }
-  .service-card:hover {
+  .service-item:hover {
     background: var(--surface-hover); border-color: var(--border-focus);
   }
   .service-icon {
@@ -244,12 +270,12 @@
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  .topbar                     { animation: fadeUp .35s 0.00s both; opacity: 0; transform: translateY(6px); }
-  .service-group:nth-child(1) { animation: fadeUp .35s 0.04s both; opacity: 0; transform: translateY(6px); }
-  .service-group:nth-child(2) { animation: fadeUp .35s 0.08s both; opacity: 0; transform: translateY(6px); }
-  .service-group:nth-child(3) { animation: fadeUp .35s 0.12s both; opacity: 0; transform: translateY(6px); }
-  .service-group:nth-child(4) { animation: fadeUp .35s 0.16s both; opacity: 0; transform: translateY(6px); }
-  .bookmarks-section          { animation: fadeUp .35s 0.19s both; opacity: 0; transform: translateY(6px); }
+  .bottombar        { animation: fadeUp .35s 0.00s both; opacity: 0; transform: translateY(6px); }
+  .service-group,
+  .bookmark-group   { opacity: 0; transform: translateY(6px); animation: fadeUp .35s both; }
+  [data-anim="off"] .service-group,
+  [data-anim="off"] .bookmark-group,
+  [data-anim="off"] .bottombar { animation: none; opacity: 1; transform: none; }
 </style>
 </head>
 <body>
@@ -258,14 +284,18 @@
 
   <div class="content" id="content">
 
+  <div id="configError" style="display:none;margin-bottom:1rem;padding:0.6rem 0.9rem;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:0.5rem;color:#f87171;font-size:0.72rem;font-weight:500;"></div>
+
+  <div class="tabbar" id="tabBar" style="display:none"></div>
+
   <div class="service-groups" id="serviceGroups"></div>
 
-  <div class="bookmarks-grid bookmarks-section" id="bookmarksGrid"></div>
+  <div class="bookmarks-grid" id="bookmarksGrid"></div>
 
-  <header class="topbar">
+  <header class="bottombar">
     <div class="options-wrap">
       <button class="ctrl-btn" id="optionsBtn" onclick="toggleOptions(event)" style="font-size:0.72rem;font-weight:600;letter-spacing:0.05em;padding:0.2rem 0.4rem;">OPTIONS</button>
-      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.15b</div>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16a</div>
       <div class="options-flyout" id="optionsFlyout"></div>
     </div>
   </header>
@@ -275,36 +305,46 @@
 </div><!-- /wrapper -->
 
 <script>
-  // ── ICONS ──
-  // Load from ./icons/<name>.webp; fall back to ? on error
+  // ── FALLBACKS ──
   function qmark() {
     return Object.assign(document.createElement('span'), { className: 'icon-qmark', textContent: '?' });
   }
-  function bmFallback(img) { img.replaceWith(qmarkBm()); }
   function qmarkBm() {
-    const s = qmark();
-    s.className = 'icon-qmark icon-qmark-bm';
-    return s;
+    return Object.assign(document.createElement('span'), { className: 'icon-qmark icon-qmark-bm', textContent: '?' });
   }
 
-  // ── RENDER FROM CONFIG ──
-  function renderServices() {
-    if (!CONFIG.services?.length) return;
-    const container = document.getElementById('serviceGroups');
-    CONFIG.services.forEach(({ group, items }) => {
+  // ── PAGES ──
+  let LINK_ELS = [];
+  let SERVICE_GROUP_COUNT = 0;
+  let PAGES;
+  try {
+    if (typeof CONFIG === 'undefined') throw new Error('config.js did not load — check the file exists and has no syntax errors.');
+    PAGES = CONFIG.pages;
+    if (!PAGES?.length) throw new Error('CONFIG.pages is missing or empty.');
+  } catch(e) {
+    console.warn('Aerodash:', e.message);
+    PAGES = [{ name: 'Home', services: [], bookmarks: [] }];
+    const err = document.getElementById('configError');
+    if (err) {
+      err.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer" style="color:#f87171;text-decoration:underline;">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer" style="color:#f87171;text-decoration:underline;">open an issue on GitHub</a>.';
+      err.style.display = 'block';
+    }
+  }
+  let activePage = Math.min(parseInt(localStorage.getItem('hp-page') || '0'), PAGES.length - 1);
+
+  function renderServices(services, container) {
+    if (!services?.length) return;
+    services.forEach(({ group, items }) => {
       const g = el('div', { className: 'service-group' });
       g.appendChild(el('div', { className: 'group-title', textContent: group }));
       const list = el('div', { className: 'service-list' });
       items.forEach(({ name, url, icon }) => {
-        const a = el('a', { href: url, className: 'service-card' });
-        a.dataset.name = name;
+        const a = el('a', { href: url, className: 'service-item' });
         const iconDiv = el('div', { className: 'service-icon' });
         if (icon) {
           const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy' });
           img.onerror = () => img.replaceWith(qmark());
           iconDiv.appendChild(img);
-        } else {
-          iconDiv.appendChild(qmark());
         }
         a.appendChild(iconDiv);
         a.appendChild(el('span', { className: 'service-name', textContent: name }));
@@ -315,10 +355,9 @@
     });
   }
 
-  function renderBookmarks() {
-    if (!CONFIG.bookmarks?.length) return;
-    const container = document.getElementById('bookmarksGrid');
-    CONFIG.bookmarks.forEach(({ group, items }) => {
+  function renderBookmarks(bookmarks, container) {
+    if (!bookmarks?.length) return;
+    bookmarks.forEach(({ group, items }) => {
       const g = el('div', { className: 'bookmark-group' });
       g.appendChild(el('div', { className: 'group-title', textContent: group }));
       const list = el('div', { className: 'bookmark-list' });
@@ -328,8 +367,6 @@
           const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy', className: 'bookmark-favicon' });
           img.onerror = () => img.replaceWith(qmarkBm());
           a.appendChild(img);
-        } else {
-          a.appendChild(qmarkBm());
         }
         a.appendChild(el('span', { className: 'bm-label', textContent: name }));
         list.appendChild(a);
@@ -339,18 +376,50 @@
     });
   }
 
-  renderServices();
-  renderBookmarks();
+  function buildTabs() {
+    const bar = document.getElementById('tabBar');
+    if (PAGES.length <= 1) { bar.style.display = 'none'; return; }
+    bar.style.display = 'flex';
+    bar.innerHTML = '';
+    PAGES.forEach((page, i) => {
+      const b = el('button', { className: 'tab-btn' + (i === activePage ? ' active' : ''), textContent: page.name });
+      b.onclick = () => switchPage(i);
+      bar.appendChild(b);
+    });
+  }
 
-  // Cache after render — these never change
-  const LINK_ELS      = document.querySelectorAll('.service-card, .bookmark-item');
-  const SERVICE_GROUP_COUNT = document.querySelectorAll('.service-group').length;
+  function switchPage(index) {
+    activePage = index;
+    localStorage.setItem('hp-page', index);
+    buildTabs();
+    renderPage(index);
+  }
+
+  function renderPage(index) {
+    const page = PAGES[index] || PAGES[0];
+    document.getElementById('serviceGroups').innerHTML = '';
+    document.getElementById('bookmarksGrid').innerHTML  = '';
+    renderServices(page.services, document.getElementById('serviceGroups'));
+    renderBookmarks(page.bookmarks, document.getElementById('bookmarksGrid'));
+
+    // Set staggered animation delays dynamically for all groups
+    const svcGroups = Array.from(document.querySelectorAll('.service-group'));
+    const bmGroups  = Array.from(document.querySelectorAll('.bookmark-group'));
+    svcGroups.forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
+    bmGroups.forEach((g, i)  => { g.style.animationDelay = (0.04 + (svcGroups.length + i) * 0.04) + 's'; });
+
+    LINK_ELS           = Array.from(document.querySelectorAll('.service-item, .bookmark-item'));
+    SERVICE_GROUP_COUNT = svcGroups.length;
+    applyLinks();
+    applyLayout();
+  }
 
   // ── LAYOUT SIZING ──
   let CARD_W = parseFloat(localStorage.getItem('hp-card-w') || '15');
-  const GRP_GAP = 1.0, CRD_GAP = 0.3;
-  const ROOT_FONT = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const rem2px = r => r * ROOT_FONT;
+  const GAP_GROUP    = 1.0, GAP_CARD = 0.3;
+  const ROOT_FONT    = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const rem2px       = r => r * ROOT_FONT;
+  const fmtCardWidth = v => parseFloat(v).toFixed(1);
 
   function applyCardWidth(w) {
     CARD_W = w;
@@ -359,15 +428,16 @@
   }
 
   function applyLayout() {
-    const n     = parseInt(localStorage.getItem('hp-cols') || '5');
-    const isH   = document.documentElement.getAttribute('data-layout') === 'horizontal';
-    const gap   = isH ? CRD_GAP : GRP_GAP;
-    const avail = document.documentElement.clientWidth - rem2px(3);
-    const fits  = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
-
-    // In vertical mode, also cap to actual number of groups so partial rows center correctly
-    const groupCount = isH ? Infinity : SERVICE_GROUP_COUNT;
-    const cols  = Math.min(n, fits, groupCount);
+    const colTarget    = parseInt(localStorage.getItem('hp-cols') || '5');
+    const isHorizontal = document.documentElement.getAttribute('data-layout') === 'horizontal';
+    const gap          = isHorizontal ? GAP_CARD : GAP_GROUP;
+    const avail        = document.documentElement.clientWidth - rem2px(3);
+    const fits         = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
+    const serviceLists = Array.from(document.querySelectorAll('.service-list'));
+    const itemCap      = isHorizontal
+      ? (serviceLists.length ? Math.max(...serviceLists.map(l => l.children.length)) : 1)
+      : SERVICE_GROUP_COUNT;
+    const cols = Math.min(colTarget, fits, itemCap);
     document.getElementById('content').style.width = (cols * rem2px(CARD_W) + (cols - 1) * rem2px(gap)) + 'px';
   }
   window.addEventListener('resize', applyLayout);
@@ -409,15 +479,15 @@
   };
 
   // Render themes as 2 rows of 6 swatches
-  function themeRows(group, current) {
+  function themeRows(group, activeTheme) {
     const wrap = el('div', { className: 'theme-wrap' });
     for (let r = 0; r < 2; r++) {
       const row = el('div', { className: 'swatch-row' });
-      THEMES[group].slice(r * 6, r * 6 + 6).forEach(t => {
-        const s = el('button', { className: 'swatch' + (t.id === current ? ' active' : ''), title: t.label });
-        s.style.background = t.color;
-        s.onclick = () => { applyTheme(t.id); buildOptions(); };
-        row.appendChild(s);
+      THEMES[group].slice(r * 6, r * 6 + 6).forEach(themeEntry => {
+        const swatch = el('button', { className: 'swatch' + (themeEntry.id === activeTheme ? ' active' : ''), title: themeEntry.label });
+        swatch.style.background = themeEntry.color;
+        swatch.onclick = () => { applyTheme(themeEntry.id); buildOptions(); };
+        row.appendChild(swatch);
       });
       wrap.appendChild(row);
     }
@@ -436,40 +506,51 @@
   }
 
   function buildOptions() {
-    const flyout  = document.getElementById('optionsFlyout');
-    const h       = document.documentElement;
-    const current = h.getAttribute('data-theme')  || 'dark';
-    const grid    = h.getAttribute('data-grid')   || 'off';
-    const glow    = h.getAttribute('data-glow')   || 'off';
-    const layout  = h.getAttribute('data-layout') || 'horizontal';
-    const icons   = h.getAttribute('data-icons')  || 'on';
-    const links   = h.getAttribute('data-links')  || 'new';
-    const cols    = parseInt(localStorage.getItem('hp-cols') || '5');
+    const flyout     = document.getElementById('optionsFlyout');
+    const html       = document.documentElement;
+    const theme      = html.getAttribute('data-theme')  || 'dark';
+    const grid       = html.getAttribute('data-grid')   || 'off';
+    const glow       = html.getAttribute('data-glow')   || 'off';
+    const layout     = html.getAttribute('data-layout') || 'horizontal';
+    const icons      = html.getAttribute('data-icons')  || 'on';
+    const links      = html.getAttribute('data-links')  || 'new';
+    const anim       = html.getAttribute('data-anim')   || 'on';
+    const cols       = parseInt(localStorage.getItem('hp-cols') || '5');
     flyout.innerHTML = '';
 
-    // THEMES rows — dark then light, no separators
+    // THEMES — dark then light
     ['dark','light'].forEach(group => {
       const row = el('div', { className: 'opt-row' });
       row.appendChild(el('span', { className: 'opt-label', textContent: group === 'dark' ? 'Dark' : 'Light' }));
-      row.appendChild(themeRows(group, current));
+      row.appendChild(themeRows(group, theme));
       flyout.appendChild(row);
     });
 
     // ICONS
     const iconsRow = el('div', { className: 'opt-row' });
     iconsRow.appendChild(el('span', { className: 'opt-label', textContent: 'Icons' }));
-    ['on','off'].forEach(v => iconsRow.appendChild(btn(v, icons===v, () => {
-      document.documentElement.setAttribute('data-icons', v);
+    ['off','on'].forEach(v => iconsRow.appendChild(btn(v, icons===v, () => {
+      html.setAttribute('data-icons', v);
       localStorage.setItem('hp-icons', v);
       buildOptions();
     })));
     flyout.appendChild(iconsRow);
 
+    // ANIM
+    const animRow = el('div', { className: 'opt-row' });
+    animRow.appendChild(el('span', { className: 'opt-label', textContent: 'Anim' }));
+    ['off','on'].forEach(v => animRow.appendChild(btn(v, anim===v, () => {
+      html.setAttribute('data-anim', v);
+      localStorage.setItem('hp-anim', v);
+      buildOptions();
+    })));
+    flyout.appendChild(animRow);
+
     // GRID
     const gridRow = el('div', { className: 'opt-row' });
     gridRow.appendChild(el('span', { className: 'opt-label', textContent: 'Grid' }));
     ['off','on'].forEach(v => gridRow.appendChild(btn(v, grid===v, () => {
-      document.documentElement.setAttribute('data-grid', v);
+      html.setAttribute('data-grid', v);
       localStorage.setItem('hp-grid', v);
       buildOptions();
     })));
@@ -479,7 +560,7 @@
     const glowRow = el('div', { className: 'opt-row' });
     glowRow.appendChild(el('span', { className: 'opt-label', textContent: 'Glow' }));
     ['off','low','high'].forEach(v => glowRow.appendChild(btn(v, glow===v, () => {
-      document.documentElement.setAttribute('data-glow', v);
+      html.setAttribute('data-glow', v);
       localStorage.setItem('hp-glow', v);
       buildOptions();
     })));
@@ -489,7 +570,7 @@
     const modeRow = el('div', { className: 'opt-row' });
     modeRow.appendChild(el('span', { className: 'opt-label', textContent: 'Mode' }));
     ['horizontal','vertical'].forEach(v => modeRow.appendChild(btn(v, layout===v, () => {
-      document.documentElement.setAttribute('data-layout', v);
+      html.setAttribute('data-layout', v);
       localStorage.setItem('hp-layout', v);
       applyLayout();
       buildOptions();
@@ -502,7 +583,7 @@
     ['new tab','same tab'].forEach((label, i) => {
       const v = i === 0 ? 'new' : 'same';
       linksRow.appendChild(btn(label, links===v, () => {
-        document.documentElement.setAttribute('data-links', v);
+        html.setAttribute('data-links', v);
         localStorage.setItem('hp-links', v);
         applyLinks();
         buildOptions();
@@ -513,22 +594,21 @@
     // CARD COLS
     const colRow = el('div', { className: 'opt-row' });
     colRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Cols' }));
-    const slider = el('input', { type: 'range', min: 1, max: 10, value: cols, className: 'opt-slider', title: 'Adjust column count' });
-    const colLbl = el('span',  { className: 'opt-col-label', textContent: cols });
-    slider.oninput  = () => { colLbl.textContent = slider.value; };
-    slider.onchange = () => { localStorage.setItem('hp-cols', slider.value); applyLayout(); buildOptions(); };
-    colRow.appendChild(slider);
+    const colSlider = el('input', { type: 'range', min: 1, max: 10, value: cols, className: 'opt-slider', title: 'Adjust column count' });
+    const colLbl    = el('span',  { className: 'opt-col-label', textContent: cols });
+    colSlider.oninput  = () => { colLbl.textContent = colSlider.value; };
+    colSlider.onchange = () => { localStorage.setItem('hp-cols', colSlider.value); applyLayout(); buildOptions(); };
+    colRow.appendChild(colSlider);
     colRow.appendChild(colLbl);
     flyout.appendChild(colRow);
 
     // CARD WIDTH
-    const cardW   = parseFloat(localStorage.getItem('hp-card-w') || '15');
-    const cwRow   = el('div', { className: 'opt-row' });
+    const cardW    = parseFloat(localStorage.getItem('hp-card-w') || '15');
+    const cwRow    = el('div', { className: 'opt-row' });
     cwRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Width' }));
     const cwSlider = el('input', { type: 'range', min: 10, max: 20, value: cardW, step: 0.5, className: 'opt-slider', title: 'Adjust card width' });
-    const fmtW = v => parseFloat(v).toFixed(1);
-    const cwLbl    = el('span', { className: 'opt-col-label', textContent: fmtW(cardW) });
-    cwSlider.oninput  = () => { cwLbl.textContent = fmtW(cwSlider.value); };
+    const cwLbl    = el('span',  { className: 'opt-col-label', textContent: fmtCardWidth(cardW) });
+    cwSlider.oninput  = () => { cwLbl.textContent = fmtCardWidth(cwSlider.value); };
     cwSlider.onchange = () => { applyCardWidth(parseFloat(cwSlider.value)); applyLayout(); buildOptions(); };
     cwRow.appendChild(cwSlider);
     cwRow.appendChild(cwLbl);
@@ -551,7 +631,11 @@
   function toggleOptions(e) {
     e.stopPropagation();
     buildOptions();
-    document.getElementById('optionsFlyout').classList.toggle('open');
+    const flyout     = document.getElementById('optionsFlyout');
+    const btnRect    = document.getElementById('optionsBtn').getBoundingClientRect();
+    const flyoutH    = flyout.scrollHeight + 20;
+    flyout.classList.toggle('flipped', btnRect.top < flyoutH);
+    flyout.classList.toggle('open');
   }
 
   // Close only when clicking outside the options wrap
@@ -566,8 +650,8 @@
   (function () {
     const cw = localStorage.getItem('hp-card-w');
     applyCardWidth(cw ? parseFloat(cw) : 15);
-    applyLinks();
-    applyLayout();
+    buildTabs();
+    renderPage(activePage);
   })();
 </script>
 </body>

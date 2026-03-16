@@ -11,8 +11,8 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 - **Services and Bookmarks**: Services for self-hosted apps, bookmarks for web links
 - **Horizontal & vertical layouts**: card-per-row grid or traditional columns
 - **24 themes**: 12 dark, 12 light, with matching accents and grid colors
-- **Local icons**: download from [selfh.st/icons](https://selfh.st/icons) and drop into `./site/icons/`
-- **Options panel**: theme picker, grid, glow, layout, links, columns, and card width
+- **Local icons**: download links below
+- **Optional icons**: Icons can be disabled completely if you'd rather not have them
 - **Persistent settings**: all preferences saved to localStorage
 - **External config**: services and bookmarks live in `config.js`, never touch `index.html`
 
@@ -57,37 +57,6 @@ aerodash/
 
 ---
 
-## config.js
-
-All your services and bookmarks live here. The git has a fully populated `config.example.js`, but here is a snippet so you can see how simple it is to make changes. 
-
-```js
-const CONFIG = {
-
-  services: [
-    {
-      group: 'Media',
-      items: [
-        { name: 'Jellyfin', url: 'http://192.168.1.10:8096', icon: './icons/jellyfin.webp' },
-        { name: 'Sonarr',   url: 'http://192.168.1.10:8989', icon: 'https://sonarr.tv/favicon.ico' },
-      ]
-    },
-  ],
-
-  bookmarks: [
-    {
-      group: 'Dev Tools',
-      items: [
-        { name: 'GitHub', url: 'https://github.com', icon: './icons/github.webp' },
-      ]
-    },
-  ],
-
-};
-```
-
----
-
 ## Services
 
 Services are your self-hosted apps, grouped by category, each with a name, URL, and icon. Clicking a card opens the URL in a new tab (or same tab, depending on your Links setting).
@@ -102,26 +71,147 @@ The `OPTIONS` are hiding at the bottom center of Aerodash. The text is a button,
 
 All settings are saved to `localStorage` and restored on page load.
 
-| Option | Values |
-|---|---|
-| Theme | 12 dark + 12 light |
-| Grid | off, on |
-| Glow | off, low, high |
-| Mode | horizontal, vertical |
-| Links | new tab, same tab |
-| Card Cols | 1–10 |
-| Card Width | 10–20rem |
-
-
 ## Icons
 
 Icons can be local files (`./icons/name.webp`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
 
-Icons are not distributed with Aerodash. Download them from **[selfh.st/icons](https://selfh.st/icons)**. This is a curated icon set for self-hosted apps available in webp, png, svg, and more.
+Icons are not distributed with Aerodash. The best places to find them are:
+* [selfh.st/icons](https://selfh.st/icons)
+* [Dashboard Icons](https://dashboardicons.com)
 
 > Icons from selfh.st are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: [selfh.st/icons](https://selfh.st/icons).
+> Icons from Dashboard Icons are licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). Attribution [Dashboard Icons](https://dashboardicons.com).
 
 ---
+
+## config.js
+
+All your services and bookmarks live here. The git has a fully populated `config.example.js`, but here is a snippet so you can see how to make changes. 
+
+
+This configuration example has 1 page (tab). Since it only has one tab, the tab selection will be hidden, but the structuring for the tabs must remain in the config.
+```js
+const CONFIG = {
+
+  pages: [
+    {
+      name: 'TAB 1',
+      services: [
+        {
+          group: 'Media',
+          items: [
+            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.webp' },
+            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.webp' },
+          ]
+        },
+        {
+          group: 'Infrastructure',
+          items: [
+            { name: 'Portainer',       url: '#', icon: './icons/portainer.webp' },
+            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.webp' },
+          ]
+        },
+      ],
+      bookmarks: [
+        {
+          group: 'Dev Tools',
+          items: [
+            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.webp' },
+            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.webp' },
+          ]
+        },
+        {
+          group: 'Utilities',
+          items: [
+            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.webp' },
+            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.webp' },
+          ]
+        },
+      ],
+    },
+  ]
+};
+```
+
+This configuration example has 2 pages (tabs). All tabs can have services and/or bookmarks. In this multi-tab configuration, a navigation block will appear at the top center of the site.
+```js
+const CONFIG = {
+
+  pages: [
+    {
+      name: 'TAB 1',
+      services: [
+        {
+          group: 'Media',
+          items: [
+            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.webp' },
+            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.webp' },
+          ]
+        },
+        {
+          group: 'Infrastructure',
+          items: [
+            { name: 'Portainer',       url: '#', icon: './icons/portainer.webp' },
+            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.webp' },
+          ]
+        },
+      ],
+      bookmarks: [
+        {
+          group: 'Dev Tools',
+          items: [
+            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.webp' },
+            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.webp' },
+          ]
+        },
+        {
+          group: 'Utilities',
+          items: [
+            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.webp' },
+            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.webp' },
+          ]
+        },
+      ],
+    },
+    {
+      name: 'TAB 2',
+      services: [
+        {
+          group: 'Downloads',
+          items: [
+            { name: 'qBittorrent',     url: '#', icon: './icons/qbittorrent.webp' },
+            { name: 'SABnzbd',         url: '#', icon: './icons/sabnzbd.webp' },
+          ]
+        },
+        {
+          group: 'Home',
+          items: [
+            { name: 'Home Assistant',  url: '#', icon: './icons/home-assistant.webp' },
+            { name: 'Immich',          url: '#', icon: './icons/immich.webp' },
+          ]
+        },
+      ],
+      bookmarks: [
+        {
+          group: 'News & Reading',
+          items: [
+            { name: 'Hacker News',     url: 'https://news.ycombinator.com',  icon: './icons/hacker-news.webp' },
+            { name: 'TLDP',            url: 'https://tldp.org',              icon: './icons/tldp.webp' },
+          ]
+        },
+        {
+          group: 'Reference',
+          items: [
+            { name: 'Arch Wiki',       url: 'https://wiki.archlinux.org',    icon: './icons/arch-linux.webp' },
+            { name: 'Docker Docs',     url: 'https://docs.docker.com',       icon: './icons/docker.webp' },
+            { name: 'Noted.lol',       url: 'https://noted.lol',             icon: './icons/noted.webp' },
+          ]
+        },
+      ] 
+    },
+  ]
+};
+```
 
 ## Updating
 
