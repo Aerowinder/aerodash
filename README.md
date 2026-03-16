@@ -8,11 +8,12 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 
 ## Features
 
+- **Services and Bookmarks**: Services for self-hosted apps, bookmarks for web links
 - **Horizontal & vertical layouts**: card-per-row grid or traditional columns
 - **24 themes**: 12 dark, 12 light, with matching accents and grid colors
 - **Local icons**: download from [selfh.st/icons](https://selfh.st/icons) and drop into `./site/icons/`
-- **Persistent settings**: all preferences saved to localStorage
 - **Options panel**: theme picker, grid, glow, layout, links, columns, and card width
+- **Persistent settings**: all preferences saved to localStorage
 - **External config**: services and bookmarks live in `config.js`, never touch `index.html`
 
 ---
@@ -58,7 +59,7 @@ aerodash/
 
 ## config.js
 
-All your services and bookmarks live here. The engine (`index.html`) never needs to be edited.
+All your services and bookmarks live here. The git has a fully populated `config.example.js`, but here is a snippet so you can see how simple it is to make changes. 
 
 ```js
 const CONFIG = {
@@ -85,23 +86,36 @@ const CONFIG = {
 };
 ```
 
-Icons can be local files (`./icons/name.webp`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as fallback.
-
 ---
 
 ## Services
 
-Services are your self-hosted apps — grouped by category, each with a name, URL, and icon. Clicking a card opens the URL in a new tab (or same tab, depending on your Links setting).
-
----
+Services are your self-hosted apps, grouped by category, each with a name, URL, and icon. Clicking a card opens the URL in a new tab (or same tab, depending on your Links setting).
 
 ## Bookmarks
 
-Bookmarks work the same as services — grouped, icon-supported, same fallback behavior.
+Bookmarks are the same as services. The only difference is the size of the card.
 
----
+## Options
+
+The `OPTIONS` are hiding at the bottom center of Aerodash. The text is a button, click it to reveal the changeable settings.
+
+All settings are saved to `localStorage` and restored on page load.
+
+| Option | Values |
+|---|---|
+| Theme | 12 dark + 12 light |
+| Grid | off, on |
+| Glow | off, low, high |
+| Mode | horizontal, vertical |
+| Links | new tab, same tab |
+| Card Cols | 1–10 |
+| Card Width | 10–20rem |
+
 
 ## Icons
+
+Icons can be local files (`./icons/name.webp`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
 
 Icons are not distributed with Aerodash. Download them from **[selfh.st/icons](https://selfh.st/icons)**. This is a curated icon set for self-hosted apps available in webp, png, svg, and more.
 
@@ -116,19 +130,3 @@ Since `/site/config.js` and `/site/icons/` are gitignored, pulling updates will 
 ```bash
 git pull
 ```
-
----
-
-## Options
-
-All settings are saved to `localStorage` and restored on page load.
-
-| Option | Values |
-|---|---|
-| Theme | 12 dark + 12 light |
-| Grid | off, on |
-| Glow | off, low, high |
-| Mode | horizontal, vertical |
-| Links | new tab, same tab |
-| Card Cols | 1–10 |
-| Card Width | 10–20rem |
