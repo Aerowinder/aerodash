@@ -6,24 +6,13 @@
 <title>Aerodash</title>
 <script src="./config.js"></script>
 <script>
-  // Apply saved theme/settings before first paint to prevent flash
+  // Apply saved settings before first paint to prevent flash
   (function() {
-    const s = localStorage;
     const h = document.documentElement;
-    const t  = s.getItem('hp-theme');
-    const l  = s.getItem('hp-layout');
-    const g  = s.getItem('hp-grid');
-    const gw = s.getItem('hp-glow');
-    const lk = s.getItem('hp-links');
-    const ic = s.getItem('hp-icons');
-    const an = s.getItem('hp-anim');
-    if (t)  h.setAttribute('data-theme',  t);
-    if (l)  h.setAttribute('data-layout', l);
-    if (g)  h.setAttribute('data-grid',   g);
-    if (gw) h.setAttribute('data-glow',   gw);
-    if (lk) h.setAttribute('data-links',  lk);
-    if (ic) h.setAttribute('data-icons',  ic);
-    if (an) h.setAttribute('data-anim',   an);
+    ['theme','layout','grid','glow','links','icons','anim'].forEach(a => {
+      const v = localStorage.getItem('hp-' + a);
+      if (v) h.setAttribute('data-' + a, v);
+    });
   })();
 </script>
 <style>
@@ -244,7 +233,7 @@
   /* ── HORIZONTAL LAYOUT ── */
   [data-layout="horizontal"] .service-groups { flex-direction: column; gap: 1.2rem; }
   [data-layout="horizontal"] .service-group  { width: 100% !important; }
-  [data-layout="horizontal"] .service-list   { display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
+  [data-layout="horizontal"] .service-list   { flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
   [data-layout="horizontal"] .group-title    { margin-bottom: 0.5rem; }
 
   /* ── BOOKMARKS ── */
@@ -276,15 +265,30 @@
   [data-anim="off"] .service-group,
   [data-anim="off"] .bookmark-group,
   [data-anim="off"] .bottombar { animation: none; opacity: 1; transform: none; }
+
+  /* ── CONFIG ERROR ── */
+  .config-error {
+    margin: 0 auto 1rem; padding: 0.6rem 0.9rem;
+    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 0.5rem; color: #f87171;
+    font-size: 0.72rem; font-weight: 500; width: fit-content;
+  }
+  .config-error a { color: #f87171; text-decoration: underline; }
+
+  /* ── OPTIONS BTN ── */
+  .options-btn {
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.05em; padding: 0.2rem 0.4rem;
+  }
 </style>
 </head>
 <body>
 <div class="glow"></div>
 <div class="wrapper">
 
-  <div class="content" id="content">
+  <div id="configError" class="config-error" style="display:none"></div>
 
-  <div id="configError" style="display:none;margin-bottom:1rem;padding:0.6rem 0.9rem;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:0.5rem;color:#f87171;font-size:0.72rem;font-weight:500;"></div>
+  <div class="content" id="content">
 
   <div class="tabbar" id="tabBar" style="display:none"></div>
 
@@ -294,8 +298,8 @@
 
   <header class="bottombar">
     <div class="options-wrap">
-      <button class="ctrl-btn" id="optionsBtn" onclick="toggleOptions(event)" style="font-size:0.72rem;font-weight:600;letter-spacing:0.05em;padding:0.2rem 0.4rem;">OPTIONS</button>
-      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16a</div>
+      <button class="ctrl-btn options-btn" id="optionsBtn" onclick="toggleOptions(event)">OPTIONS</button>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16b</div>
       <div class="options-flyout" id="optionsFlyout"></div>
     </div>
   </header>
@@ -326,7 +330,7 @@
     PAGES = [{ name: 'Home', services: [], bookmarks: [] }];
     const err = document.getElementById('configError');
     if (err) {
-      err.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer" style="color:#f87171;text-decoration:underline;">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer" style="color:#f87171;text-decoration:underline;">open an issue on GitHub</a>.';
+      err.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.';
       err.style.display = 'block';
     }
   }
@@ -342,7 +346,7 @@
         const a = el('a', { href: url, className: 'service-item' });
         const iconDiv = el('div', { className: 'service-icon' });
         if (icon) {
-          const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy' });
+          const img = Object.assign(document.createElement('img'), { src: icon, alt: '', loading: 'lazy' });
           img.onerror = () => img.replaceWith(qmark());
           iconDiv.appendChild(img);
         }
@@ -364,7 +368,7 @@
       items.forEach(({ name, url, icon }) => {
         const a = el('a', { href: url, className: 'bookmark-item' });
         if (icon) {
-          const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy', className: 'bookmark-favicon' });
+          const img = Object.assign(document.createElement('img'), { src: icon, alt: '', loading: 'lazy', className: 'bookmark-favicon' });
           img.onerror = () => img.replaceWith(qmarkBm());
           a.appendChild(img);
         }
@@ -402,13 +406,13 @@
     renderServices(page.services, document.getElementById('serviceGroups'));
     renderBookmarks(page.bookmarks, document.getElementById('bookmarksGrid'));
 
-    // Set staggered animation delays dynamically for all groups
-    const svcGroups = Array.from(document.querySelectorAll('.service-group'));
-    const bmGroups  = Array.from(document.querySelectorAll('.bookmark-group'));
-    svcGroups.forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
-    bmGroups.forEach((g, i)  => { g.style.animationDelay = (0.04 + (svcGroups.length + i) * 0.04) + 's'; });
+    const allGroups = document.querySelectorAll('.service-group, .bookmark-group');
+    const svcGroups = document.querySelectorAll('.service-group');
 
-    LINK_ELS           = Array.from(document.querySelectorAll('.service-item, .bookmark-item'));
+    // Stagger animation delays across all groups in sequence
+    allGroups.forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
+
+    LINK_ELS            = Array.from(document.querySelectorAll('.service-item, .bookmark-item'));
     SERVICE_GROUP_COUNT = svcGroups.length;
     applyLinks();
     applyLayout();
@@ -494,10 +498,8 @@
     return wrap;
   }
 
-  function el(tag, props, children) {
-    const e = Object.assign(document.createElement(tag), props);
-    (children || []).forEach(c => e.appendChild(c));
-    return e;
+  function el(tag, props) {
+    return Object.assign(document.createElement(tag), props);
   }
   function btn(text, active, onclick) {
     const b = el('button', { className: 'pal-btn' + (active ? ' active' : ''), textContent: text });
@@ -505,17 +507,26 @@
     return b;
   }
 
+  // Builds a labeled row of toggle buttons in the options flyout
+  function optRow(label, values, active, attr, storageKey, extraAction) {
+    const row = el('div', { className: 'opt-row' });
+    row.appendChild(el('span', { className: 'opt-label', textContent: label }));
+    values.forEach(([display, value]) => {
+      row.appendChild(btn(display, active === value, () => {
+        document.documentElement.setAttribute(attr, value);
+        localStorage.setItem(storageKey, value);
+        if (extraAction) extraAction();
+        buildOptions();
+      }));
+    });
+    return row;
+  }
+
   function buildOptions() {
-    const flyout     = document.getElementById('optionsFlyout');
-    const html       = document.documentElement;
-    const theme      = html.getAttribute('data-theme')  || 'dark';
-    const grid       = html.getAttribute('data-grid')   || 'off';
-    const glow       = html.getAttribute('data-glow')   || 'off';
-    const layout     = html.getAttribute('data-layout') || 'horizontal';
-    const icons      = html.getAttribute('data-icons')  || 'on';
-    const links      = html.getAttribute('data-links')  || 'new';
-    const anim       = html.getAttribute('data-anim')   || 'on';
-    const cols       = parseInt(localStorage.getItem('hp-cols') || '5');
+    const flyout = document.getElementById('optionsFlyout');
+    const html   = document.documentElement;
+    const theme  = html.getAttribute('data-theme')  || 'dark';
+    const cols   = parseInt(localStorage.getItem('hp-cols') || '5');
     flyout.innerHTML = '';
 
     // THEMES — dark then light
@@ -526,78 +537,20 @@
       flyout.appendChild(row);
     });
 
-    // ICONS
-    const iconsRow = el('div', { className: 'opt-row' });
-    iconsRow.appendChild(el('span', { className: 'opt-label', textContent: 'Icons' }));
-    ['off','on'].forEach(v => iconsRow.appendChild(btn(v, icons===v, () => {
-      html.setAttribute('data-icons', v);
-      localStorage.setItem('hp-icons', v);
-      buildOptions();
-    })));
-    flyout.appendChild(iconsRow);
-
-    // ANIM
-    const animRow = el('div', { className: 'opt-row' });
-    animRow.appendChild(el('span', { className: 'opt-label', textContent: 'Anim' }));
-    ['off','on'].forEach(v => animRow.appendChild(btn(v, anim===v, () => {
-      html.setAttribute('data-anim', v);
-      localStorage.setItem('hp-anim', v);
-      buildOptions();
-    })));
-    flyout.appendChild(animRow);
-
-    // GRID
-    const gridRow = el('div', { className: 'opt-row' });
-    gridRow.appendChild(el('span', { className: 'opt-label', textContent: 'Grid' }));
-    ['off','on'].forEach(v => gridRow.appendChild(btn(v, grid===v, () => {
-      html.setAttribute('data-grid', v);
-      localStorage.setItem('hp-grid', v);
-      buildOptions();
-    })));
-    flyout.appendChild(gridRow);
-
-    // GLOW
-    const glowRow = el('div', { className: 'opt-row' });
-    glowRow.appendChild(el('span', { className: 'opt-label', textContent: 'Glow' }));
-    ['off','low','high'].forEach(v => glowRow.appendChild(btn(v, glow===v, () => {
-      html.setAttribute('data-glow', v);
-      localStorage.setItem('hp-glow', v);
-      buildOptions();
-    })));
-    flyout.appendChild(glowRow);
-
-    // MODE
-    const modeRow = el('div', { className: 'opt-row' });
-    modeRow.appendChild(el('span', { className: 'opt-label', textContent: 'Mode' }));
-    ['horizontal','vertical'].forEach(v => modeRow.appendChild(btn(v, layout===v, () => {
-      html.setAttribute('data-layout', v);
-      localStorage.setItem('hp-layout', v);
-      applyLayout();
-      buildOptions();
-    })));
-    flyout.appendChild(modeRow);
-
-    // LINKS
-    const linksRow = el('div', { className: 'opt-row' });
-    linksRow.appendChild(el('span', { className: 'opt-label', textContent: 'Links' }));
-    ['new tab','same tab'].forEach((label, i) => {
-      const v = i === 0 ? 'new' : 'same';
-      linksRow.appendChild(btn(label, links===v, () => {
-        html.setAttribute('data-links', v);
-        localStorage.setItem('hp-links', v);
-        applyLinks();
-        buildOptions();
-      }));
-    });
-    flyout.appendChild(linksRow);
+    flyout.appendChild(optRow('Icons',  [['off','off'],['on','on']],            html.getAttribute('data-icons')  ||'on',         'data-icons',  'hp-icons'));
+    flyout.appendChild(optRow('Anim',   [['off','off'],['on','on']],            html.getAttribute('data-anim')   ||'on',         'data-anim',   'hp-anim'));
+    flyout.appendChild(optRow('Grid',   [['off','off'],['on','on']],            html.getAttribute('data-grid')   ||'off',        'data-grid',   'hp-grid'));
+    flyout.appendChild(optRow('Glow',   [['off','off'],['low','low'],['high','high']], html.getAttribute('data-glow')||'off',     'data-glow',   'hp-glow'));
+    flyout.appendChild(optRow('Mode',   [['horizontal','horizontal'],['vertical','vertical']], html.getAttribute('data-layout')||'horizontal', 'data-layout', 'hp-layout', applyLayout));
+    flyout.appendChild(optRow('Links',  [['new tab','new'],['same tab','same']], html.getAttribute('data-links') ||'new',        'data-links',  'hp-links',  applyLinks));
 
     // CARD COLS
-    const colRow = el('div', { className: 'opt-row' });
-    colRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Cols' }));
+    const colRow    = el('div', { className: 'opt-row' });
     const colSlider = el('input', { type: 'range', min: 1, max: 10, value: cols, className: 'opt-slider', title: 'Adjust column count' });
     const colLbl    = el('span',  { className: 'opt-col-label', textContent: cols });
     colSlider.oninput  = () => { colLbl.textContent = colSlider.value; };
     colSlider.onchange = () => { localStorage.setItem('hp-cols', colSlider.value); applyLayout(); buildOptions(); };
+    colRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Cols' }));
     colRow.appendChild(colSlider);
     colRow.appendChild(colLbl);
     flyout.appendChild(colRow);
@@ -605,11 +558,11 @@
     // CARD WIDTH
     const cardW    = parseFloat(localStorage.getItem('hp-card-w') || '15');
     const cwRow    = el('div', { className: 'opt-row' });
-    cwRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Width' }));
     const cwSlider = el('input', { type: 'range', min: 10, max: 20, value: cardW, step: 0.5, className: 'opt-slider', title: 'Adjust card width' });
     const cwLbl    = el('span',  { className: 'opt-col-label', textContent: fmtCardWidth(cardW) });
     cwSlider.oninput  = () => { cwLbl.textContent = fmtCardWidth(cwSlider.value); };
     cwSlider.onchange = () => { applyCardWidth(parseFloat(cwSlider.value)); applyLayout(); buildOptions(); };
+    cwRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Width' }));
     cwRow.appendChild(cwSlider);
     cwRow.appendChild(cwLbl);
     flyout.appendChild(cwRow);
