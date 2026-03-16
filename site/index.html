@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerodash</title>
+<script src="./config.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 20px; }
+
+  /* ── THEMES ── */
+  :root, [data-theme="dark"]        { --bg:#0f1117; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(99,102,241,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#6366f1; --accent2:#818cf8; --grid-color:rgba(99,102,241,0.03); --glow-color:rgba(99,102,241,0.08); }
+  [data-theme="dark-blue"]          { --bg:#0d1117; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(59,130,246,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#3b82f6; --accent2:#60a5fa; --grid-color:rgba(59,130,246,0.03); --glow-color:rgba(59,130,246,0.08); }
+  [data-theme="dark-green"]         { --bg:#0d1210; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(34,197,94,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#22c55e; --accent2:#4ade80; --grid-color:rgba(34,197,94,0.03); --glow-color:rgba(34,197,94,0.08); }
+  [data-theme="dark-red"]           { --bg:#130d0d; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(239,68,68,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#ef4444; --accent2:#f87171; --grid-color:rgba(239,68,68,0.03); --glow-color:rgba(239,68,68,0.08); }
+  [data-theme="dark-warm"]          { --bg:#12100e; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(249,115,22,0.5); --text:#e8e0d5; --muted:#7c6f61; --accent:#f97316; --accent2:#fb923c; --grid-color:rgba(249,115,22,0.03); --glow-color:rgba(249,115,22,0.08); }
+  [data-theme="light"]              { --bg:#f1f5f9; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(99,102,241,0.4); --text:#1e293b; --muted:#94a3b8; --accent:#6366f1; --accent2:#4f46e5; --grid-color:rgba(99,102,241,0.04); --glow-color:rgba(99,102,241,0.05); }
+  [data-theme="light-warm"]         { --bg:#fdf6ee; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(249,115,22,0.4); --text:#292218; --muted:#a8907a; --accent:#f97316; --accent2:#ea6d0e; --grid-color:rgba(249,115,22,0.04); --glow-color:rgba(249,115,22,0.05); }
+  [data-theme="dark-teal"]          { --bg:#0d1214; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(20,184,166,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#14b8a6; --accent2:#2dd4bf; --grid-color:rgba(20,184,166,0.03); --glow-color:rgba(20,184,166,0.08); }
+  [data-theme="dark-purple"]        { --bg:#100d13; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(168,85,247,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#a855f7; --accent2:#c084fc; --grid-color:rgba(168,85,247,0.03); --glow-color:rgba(168,85,247,0.08); }
+  [data-theme="dark-rose"]          { --bg:#130d10; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(244,63,94,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#f43f5e; --accent2:#fb7185; --grid-color:rgba(244,63,94,0.03); --glow-color:rgba(244,63,94,0.08); }
+  [data-theme="light-teal"]         { --bg:#f0faf8; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(20,184,166,0.4); --text:#0f2926; --muted:#6aada4; --accent:#14b8a6; --accent2:#0d9488; --grid-color:rgba(20,184,166,0.04); --glow-color:rgba(20,184,166,0.05); }
+  [data-theme="light-green"]        { --bg:#f0faf2; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(34,197,94,0.4); --text:#0f2916; --muted:#6aad7a; --accent:#22c55e; --accent2:#16a34a; --grid-color:rgba(34,197,94,0.04); --glow-color:rgba(34,197,94,0.05); }
+  [data-theme="light-rose"]         { --bg:#fff0f3; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(244,63,94,0.4); --text:#290f18; --muted:#c47a8a; --accent:#f43f5e; --accent2:#e11d48; --grid-color:rgba(244,63,94,0.04); --glow-color:rgba(244,63,94,0.05); }
+  [data-theme="light-purple"]       { --bg:#f5f0ff; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(168,85,247,0.4); --text:#1a0f29; --muted:#9f7ac4; --accent:#a855f7; --accent2:#9333ea; --grid-color:rgba(168,85,247,0.04); --glow-color:rgba(168,85,247,0.05); }
+  [data-theme="light-blue"]         { --bg:#f0f7ff; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(59,130,246,0.4); --text:#0f2340; --muted:#7aa3c8; --accent:#3b82f6; --accent2:#2563eb; --grid-color:rgba(59,130,246,0.04); --glow-color:rgba(59,130,246,0.05); }
+  [data-theme="light-stone"]        { --bg:#f5f5f0; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(120,113,108,0.4); --text:#1c1917; --muted:#a8a29e; --accent:#78716c; --accent2:#57534e; --grid-color:rgba(120,113,108,0.04); --glow-color:rgba(120,113,108,0.05); }
+  [data-theme="dark-navy"]          { --bg:#0a0f1e; --surface:rgba(255,255,255,0.05); --surface-hover:rgba(255,255,255,0.10); --border:rgba(255,255,255,0.12); --border-focus:rgba(96,165,250,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#60a5fa; --accent2:#93c5fd; --grid-color:rgba(96,165,250,0.04); --glow-color:rgba(96,165,250,0.1); }
+  [data-theme="dark-charcoal"]      { --bg:#1a1a1a; --surface:rgba(255,255,255,0.05); --surface-hover:rgba(255,255,255,0.10); --border:rgba(255,255,255,0.12); --border-focus:rgba(156,163,175,0.5); --text:#f3f4f6; --muted:#6b7280; --accent:#9ca3af; --accent2:#d1d5db; --grid-color:rgba(156,163,175,0.03); --glow-color:rgba(156,163,175,0.07); }
+  [data-theme="dark-forest"]        { --bg:#0d1a0f; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(74,222,128,0.5); --text:#dcfce7; --muted:#4d7a57; --accent:#4ade80; --accent2:#86efac; --grid-color:rgba(74,222,128,0.03); --glow-color:rgba(74,222,128,0.08); }
+  [data-theme="dark-slate"]         { --bg:#0f172a; --surface:rgba(255,255,255,0.04); --surface-hover:rgba(255,255,255,0.09); --border:rgba(255,255,255,0.12); --border-focus:rgba(148,163,184,0.5); --text:#e2e8f0; --muted:#64748b; --accent:#94a3b8; --accent2:#cbd5e1; --grid-color:rgba(148,163,184,0.03); --glow-color:rgba(148,163,184,0.07); }
+  [data-theme="light-cream"]        { --bg:#fffdf5; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(202,138,4,0.4); --text:#1c1400; --muted:#a38e47; --accent:#ca8a04; --accent2:#a16207; --grid-color:rgba(202,138,4,0.04); --glow-color:rgba(202,138,4,0.05); }
+  [data-theme="light-mint"]         { --bg:#f0fff8; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(16,185,129,0.4); --text:#022c22; --muted:#5aad8c; --accent:#10b981; --accent2:#059669; --grid-color:rgba(16,185,129,0.04); --glow-color:rgba(16,185,129,0.05); }
+  [data-theme="light-peach"]        { --bg:#fff7f0; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(251,146,60,0.4); --text:#2c1400; --muted:#b07040; --accent:#fb923c; --accent2:#ea580c; --grid-color:rgba(251,146,60,0.04); --glow-color:rgba(251,146,60,0.05); }
+  [data-theme="light-lavender"]     { --bg:#f8f5ff; --surface:rgba(0,0,0,0.04); --surface-hover:rgba(0,0,0,0.07); --border:rgba(0,0,0,0.15); --border-focus:rgba(139,92,246,0.4); --text:#1e0a3c; --muted:#9575c2; --accent:#8b5cf6; --accent2:#7c3aed; --grid-color:rgba(139,92,246,0.04); --glow-color:rgba(139,92,246,0.05); }
+
+  /* ── BASE ── */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; overflow-x: hidden;
+    transition: background 0.25s, color 0.25s;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    transition: opacity 0.25s;
+  }
+  [data-grid="off"] body::before { opacity: 0; }
+
+  /* Glow */
+  .glow {
+    position: fixed; top: -12rem; left: 50%; transform: translateX(-50%);
+    width: 37.5rem; height: 37.5rem; border-radius: 50%;
+    background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+    pointer-events: none; z-index: 0; transition: opacity 0.25s;
+  }
+  [data-glow="off"]  .glow { opacity: 0; }
+  [data-glow="low"]  .glow { opacity: 0.4; }
+  [data-glow="high"] .glow { opacity: 3; }
+
+  /* ── PAGE ── */
+  .wrapper {
+    position: relative; z-index: 1;
+    padding: 2rem 1.5rem 3rem;
+  }
+  .content { margin: 0 auto; }
+
+  /* ── BOTTOMBAR ── */
+  .topbar {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.7rem 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+    transition: border-color 0.25s;
+  }
+  .ctrl-btn {
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 0.82rem; line-height: 1;
+    padding: 0.1rem 0.15rem; border-radius: 0.25rem;
+    transition: color 0.15s, transform 0.18s;
+  }
+  .ctrl-btn:hover { color: var(--accent2); }
+  .vdivider { width: 1px; height: 0.85rem; background: var(--border); flex-shrink: 0; }
+
+  /* ── OPTIONS FLYOUT ── */
+  .options-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .options-flyout {
+    position: absolute; bottom: calc(100% + 0.6rem); left: 50%; transform: translateX(-50%);
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 0.6rem; padding: 0.6rem 0.65rem;
+    display: flex; flex-direction: column; gap: 0.45rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s;
+    transform: translateX(-50%) translateY(4px);
+    z-index: 200; min-width: 14rem;
+  }
+  .options-flyout.open {
+    opacity: 1; pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .opt-row { display: flex; align-items: center; gap: 0.4rem; }
+  .opt-label {
+    font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+    min-width: 3.8rem; flex-shrink: 0;
+  }
+  .swatch-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .swatch {
+    width: 1.1rem; height: 1.1rem; border-radius: 50%;
+    cursor: pointer; border: 2px solid transparent;
+    transition: transform 0.12s, border-color 0.12s;
+    flex-shrink: 0;
+  }
+  .swatch:hover { transform: scale(1.2); }
+  .swatch.active { border-color: #fff; }
+  [data-theme^="light"] .swatch.active { border-color: #000; }
+
+  /* Flyout control buttons */
+  .pal-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); border-radius: 0.3rem;
+    font-size: 0.6rem; font-weight: 500; cursor: pointer;
+    padding: 0.18rem 0.35rem; white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .pal-btn:hover { background: var(--surface-hover); color: var(--text); }
+  .pal-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Inline slider in flyout */
+  .opt-slider {
+    -webkit-appearance: none; appearance: none;
+    flex: 1; height: 3px; border-radius: 2px;
+    background: var(--border); outline: none; cursor: pointer;
+  }
+  .opt-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--accent2); cursor: pointer;
+    box-shadow: 0 0 5px var(--accent);
+  }
+  .opt-slider::-moz-range-thumb {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--accent2); cursor: pointer;
+    border: none; box-shadow: 0 0 5px var(--accent);
+  }
+  .opt-col-label {
+    font-size: 0.62rem; color: var(--muted);
+    font-variant-numeric: tabular-nums; font-weight: 500; min-width: 0.8rem; text-align: right;
+  }
+
+  :root { --card-w: 15rem; }
+
+  /* ── SHARED ── */
+  .group-title {
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; padding-left: 0.15rem;
+  }
+
+  /* ── SERVICE CARDS ── */
+  .service-card {
+    display: flex; align-items: center; gap: 0.6rem;
+    width: var(--card-w); padding: 0.6rem 0.75rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 0.5rem; text-decoration: none; color: var(--text);
+    white-space: nowrap; overflow: hidden;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .service-card:hover {
+    background: var(--surface-hover); border-color: var(--border-focus);
+  }
+  .service-icon {
+    width: 1.75rem; height: 1.75rem; border-radius: 0.35rem; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+  }
+  .service-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.2rem; }
+  .service-name { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── VERTICAL LAYOUT ── */
+  .service-groups {
+    display: flex; flex-wrap: wrap;
+    gap: 1rem; padding-top: 1.2rem; margin-bottom: 1.6rem;
+  }
+  .service-list { display: flex; flex-direction: column; gap: 0.3rem; }
+
+  /* ── HORIZONTAL LAYOUT ── */
+  [data-layout="horizontal"] .service-groups { flex-direction: column; gap: 1.2rem; }
+  [data-layout="horizontal"] .service-group  { width: 100% !important; }
+  [data-layout="horizontal"] .service-list   { display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
+  [data-layout="horizontal"] .group-title    { margin-bottom: 0.5rem; }
+
+  /* ── BOOKMARKS ── */
+  .bookmarks-grid { display: flex; flex-wrap: wrap; gap: 1rem; align-content: flex-start; }
+  .bookmark-group { width: var(--card-w); flex-shrink: 0; }
+  .bookmark-list  { display: flex; flex-direction: column; gap: 0.3rem; }
+  [data-layout="horizontal"] .bookmark-group { width: 100%; flex-shrink: 1; }
+  [data-layout="horizontal"] .bookmark-list { flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
+
+  .bookmark-item {
+    display: flex; align-items: center; gap: 0.45rem;
+    width: var(--card-w); padding: 0.44rem 0.55rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 0.35rem; text-decoration: none; color: var(--text);
+    font-size: 0.78rem; font-weight: 400;
+    white-space: nowrap; overflow: hidden;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .bookmark-item:hover { background: var(--surface-hover); border-color: var(--border-focus); }
+  .bookmark-favicon { width: 0.8rem; height: 0.8rem; border-radius: 0.12rem; object-fit: contain; flex-shrink: 0; }
+  .bm-label { overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .topbar                     { animation: fadeUp .35s 0.00s both; opacity: 0; transform: translateY(6px); }
+  .service-group:nth-child(1) { animation: fadeUp .35s 0.04s both; opacity: 0; transform: translateY(6px); }
+  .service-group:nth-child(2) { animation: fadeUp .35s 0.08s both; opacity: 0; transform: translateY(6px); }
+  .service-group:nth-child(3) { animation: fadeUp .35s 0.12s both; opacity: 0; transform: translateY(6px); }
+  .service-group:nth-child(4) { animation: fadeUp .35s 0.16s both; opacity: 0; transform: translateY(6px); }
+  .bookmarks-section          { animation: fadeUp .35s 0.19s both; opacity: 0; transform: translateY(6px); }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrapper">
+
+  <div class="content" id="content">
+
+  <div class="service-groups" id="serviceGroups"></div>
+
+  <div class="bookmarks-grid bookmarks-section" id="bookmarksGrid"></div>
+
+  <header class="topbar">
+    <div class="options-wrap">
+      <button class="ctrl-btn" id="optionsBtn" onclick="toggleOptions(event)" style="font-size:0.72rem;font-weight:600;letter-spacing:0.05em;padding:0.2rem 0.4rem;">OPTIONS</button>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.15a</div>
+      <div class="options-flyout" id="optionsFlyout"></div>
+    </div>
+  </header>
+
+  </div><!-- /content -->
+
+</div><!-- /wrapper -->
+
+<script>
+  // ── ICONS ──
+  // Load from ./icons/<name>.webp; fall back to ? on error
+  function qmark() {
+    return Object.assign(document.createElement('span'), { textContent: '?' });
+  }
+  function bmFallback(img) { img.replaceWith(qmarkBm()); }
+  function qmarkBm() {
+    const s = qmark();
+    s.style.cssText = 'width:0.8rem;height:0.8rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.65rem;';
+    return s;
+  }
+
+  // ── RENDER FROM CONFIG ──
+  function renderServices() {
+    const container = document.getElementById('serviceGroups');
+    CONFIG.services.forEach(({ group, items }) => {
+      const g = el('div', { className: 'service-group' });
+      g.appendChild(el('div', { className: 'group-title', textContent: group }));
+      const list = el('div', { className: 'service-list' });
+      items.forEach(({ name, url, icon }) => {
+        const a = el('a', { href: url, className: 'service-card' });
+        a.dataset.name = name;
+        const iconDiv = el('div', { className: 'service-icon' });
+        if (icon) {
+          const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy' });
+          img.onerror = () => img.replaceWith(qmark());
+          iconDiv.appendChild(img);
+        } else {
+          iconDiv.appendChild(qmark());
+        }
+        a.appendChild(iconDiv);
+        a.appendChild(el('span', { className: 'service-name', textContent: name }));
+        list.appendChild(a);
+      });
+      g.appendChild(list);
+      container.appendChild(g);
+    });
+  }
+
+  function renderBookmarks() {
+    const container = document.getElementById('bookmarksGrid');
+    CONFIG.bookmarks.forEach(({ group, items }) => {
+      const g = el('div', { className: 'bookmark-group' });
+      g.appendChild(el('div', { className: 'group-title', textContent: group }));
+      const list = el('div', { className: 'bookmark-list' });
+      items.forEach(({ name, url, icon }) => {
+        const a = el('a', { href: url, className: 'bookmark-item' });
+        if (icon) {
+          const img = Object.assign(document.createElement('img'), { src: icon, alt: name, loading: 'lazy', className: 'bookmark-favicon' });
+          img.onerror = () => img.replaceWith(qmarkBm());
+          a.appendChild(img);
+        } else {
+          a.appendChild(qmarkBm());
+        }
+        a.appendChild(el('span', { className: 'bm-label', textContent: name }));
+        list.appendChild(a);
+      });
+      g.appendChild(list);
+      container.appendChild(g);
+    });
+  }
+
+  renderServices();
+  renderBookmarks();
+
+  // Cache after render since elements are created dynamically
+  const LINK_ELS = document.querySelectorAll('.service-card, .bookmark-item');
+
+  // ── LAYOUT SIZING ──
+  let CARD_W = parseFloat(localStorage.getItem('hp-card-w') || '15');
+  const GRP_GAP = 1.0, CRD_GAP = 0.3;
+  const ROOT_FONT = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const rem2px = r => r * ROOT_FONT;
+
+  function applyCardWidth(w) {
+    CARD_W = w;
+    document.documentElement.style.setProperty('--card-w', w + 'rem');
+    localStorage.setItem('hp-card-w', w);
+  }
+
+  function applyLayout() {
+    const n     = parseInt(localStorage.getItem('hp-cols') || '5');
+    const isH   = document.documentElement.getAttribute('data-layout') === 'horizontal';
+    const gap   = isH ? CRD_GAP : GRP_GAP;
+    const avail = document.documentElement.clientWidth - rem2px(3);
+    const fits  = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
+
+    // In vertical mode, also cap to actual number of groups so partial rows center correctly
+    const groupCount = isH ? Infinity : document.querySelectorAll('.service-group').length;
+    const cols  = Math.min(n, fits, groupCount);
+    document.getElementById('content').style.width = (cols * rem2px(CARD_W) + (cols - 1) * rem2px(gap)) + 'px';
+  }
+  window.addEventListener('resize', applyLayout);
+
+  // ── OPTIONS PANEL ──
+  const THEMES = {
+    dark: [
+      // Row 1: neutrals → cool blues
+      { id: 'dark',          color: '#475569', label: 'Dark' },
+      { id: 'dark-charcoal', color: '#3a3a3a', label: 'Dark Charcoal' },
+      { id: 'dark-slate',    color: '#334155', label: 'Dark Slate' },
+      { id: 'dark-navy',     color: '#1e3a5f', label: 'Dark Navy' },
+      { id: 'dark-blue',     color: '#3b82f6', label: 'Dark Blue' },
+      { id: 'dark-teal',     color: '#14b8a6', label: 'Dark Teal' },
+      // Row 2: greens → warm → purple
+      { id: 'dark-forest',   color: '#166534', label: 'Dark Forest' },
+      { id: 'dark-green',    color: '#22c55e', label: 'Dark Green' },
+      { id: 'dark-warm',     color: '#f97316', label: 'Dark Warm' },
+      { id: 'dark-red',      color: '#ef4444', label: 'Dark Red' },
+      { id: 'dark-rose',     color: '#f43f5e', label: 'Dark Rose' },
+      { id: 'dark-purple',   color: '#a855f7', label: 'Dark Purple' },
+    ],
+    light: [
+      // Row 1: neutrals → warm
+      { id: 'light',         color: '#cbd5e1', label: 'Light' },
+      { id: 'light-stone',   color: '#d6d3d1', label: 'Light Stone' },
+      { id: 'light-cream',   color: '#fef08a', label: 'Light Cream' },
+      { id: 'light-warm',    color: '#fdba74', label: 'Light Warm' },
+      { id: 'light-peach',   color: '#fed7aa', label: 'Light Peach' },
+      { id: 'light-rose',    color: '#fda4af', label: 'Light Rose' },
+      // Row 2: purples → cool
+      { id: 'light-lavender',color: '#ddd6fe', label: 'Light Lavender' },
+      { id: 'light-purple',  color: '#d8b4fe', label: 'Light Purple' },
+      { id: 'light-blue',    color: '#93c5fd', label: 'Light Blue' },
+      { id: 'light-teal',    color: '#5eead4', label: 'Light Teal' },
+      { id: 'light-mint',    color: '#a7f3d0', label: 'Light Mint' },
+      { id: 'light-green',   color: '#86efac', label: 'Light Green' },
+    ]
+  };
+
+  // Render themes as 2 rows of 6 swatches
+  function themeRows(group, current) {
+    const wrap = el('div', { style: 'display:flex;flex-direction:column;gap:0.25rem;' });
+    for (let r = 0; r < 2; r++) {
+      const row = el('div', { className: 'swatch-row' });
+      THEMES[group].slice(r * 6, r * 6 + 6).forEach(t => {
+        const s = el('button', { className: 'swatch' + (t.id === current ? ' active' : ''), title: t.label });
+        s.style.background = t.color;
+        s.onclick = () => { applyTheme(t.id); buildOptions(); };
+        row.appendChild(s);
+      });
+      wrap.appendChild(row);
+    }
+    return wrap;
+  }
+
+  function el(tag, props, children) {
+    const e = Object.assign(document.createElement(tag), props);
+    (children || []).forEach(c => e.appendChild(c));
+    return e;
+  }
+  function btn(text, active, onclick) {
+    const b = el('button', { className: 'pal-btn' + (active ? ' active' : ''), textContent: text });
+    b.onclick = onclick;
+    return b;
+  }
+
+  function buildOptions() {
+    const flyout  = document.getElementById('optionsFlyout');
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const grid    = document.documentElement.getAttribute('data-grid') || 'off';
+    const glow    = document.documentElement.getAttribute('data-glow') || 'off';
+    const layout  = document.documentElement.getAttribute('data-layout') || 'horizontal';
+    const cols    = parseInt(localStorage.getItem('hp-cols') || '5');
+    flyout.innerHTML = '';
+
+    // THEMES rows — dark then light, no separators
+    ['dark','light'].forEach(group => {
+      const row = el('div', { className: 'opt-row' });
+      row.appendChild(el('span', { className: 'opt-label', textContent: group === 'dark' ? 'Dark' : 'Light' }));
+      row.appendChild(themeRows(group, current));
+      flyout.appendChild(row);
+    });
+
+    // GRID
+    const gridRow = el('div', { className: 'opt-row' });
+    gridRow.appendChild(el('span', { className: 'opt-label', textContent: 'Grid' }));
+    ['off','on'].forEach(v => gridRow.appendChild(btn(v, grid===v, () => {
+      document.documentElement.setAttribute('data-grid', v);
+      localStorage.setItem('hp-grid', v);
+      buildOptions();
+    })));
+    flyout.appendChild(gridRow);
+
+    // GLOW
+    const glowRow = el('div', { className: 'opt-row' });
+    glowRow.appendChild(el('span', { className: 'opt-label', textContent: 'Glow' }));
+    ['off','low','high'].forEach(v => glowRow.appendChild(btn(v, glow===v, () => {
+      document.documentElement.setAttribute('data-glow', v);
+      localStorage.setItem('hp-glow', v);
+      buildOptions();
+    })));
+    flyout.appendChild(glowRow);
+
+    // MODE
+    const modeRow = el('div', { className: 'opt-row' });
+    modeRow.appendChild(el('span', { className: 'opt-label', textContent: 'Mode' }));
+    ['horizontal','vertical'].forEach(v => modeRow.appendChild(btn(v, layout===v, () => {
+      document.documentElement.setAttribute('data-layout', v);
+      localStorage.setItem('hp-layout', v);
+      applyLayout();
+      buildOptions();
+    })));
+    flyout.appendChild(modeRow);
+
+    // LINKS
+    const links = document.documentElement.getAttribute('data-links') || 'new';
+    const linksRow = el('div', { className: 'opt-row' });
+    linksRow.appendChild(el('span', { className: 'opt-label', textContent: 'Links' }));
+    ['new tab','same tab'].forEach((label, i) => {
+      const v = i === 0 ? 'new' : 'same';
+      linksRow.appendChild(btn(label, links===v, () => {
+        document.documentElement.setAttribute('data-links', v);
+        localStorage.setItem('hp-links', v);
+        applyLinks();
+        buildOptions();
+      }));
+    });
+    flyout.appendChild(linksRow);
+
+    // CARD COLS
+    const colRow = el('div', { className: 'opt-row' });
+    colRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Cols' }));
+    const slider = el('input', { type: 'range', min: 1, max: 10, value: cols, className: 'opt-slider', title: 'Adjust column count' });
+    const colLbl = el('span',  { className: 'opt-col-label', textContent: cols });
+    slider.oninput  = () => { colLbl.textContent = slider.value; };
+    slider.onchange = () => { localStorage.setItem('hp-cols', slider.value); applyLayout(); buildOptions(); };
+    colRow.appendChild(slider);
+    colRow.appendChild(colLbl);
+    flyout.appendChild(colRow);
+
+    // CARD WIDTH
+    const cardW   = parseFloat(localStorage.getItem('hp-card-w') || '15');
+    const cwRow   = el('div', { className: 'opt-row' });
+    cwRow.appendChild(el('span', { className: 'opt-label', textContent: 'Card Width' }));
+    const cwSlider = el('input', { type: 'range', min: 10, max: 20, value: cardW, step: 0.5, className: 'opt-slider', title: 'Adjust card width' });
+    const fmtW = v => parseFloat(v).toFixed(1);
+    const cwLbl    = el('span', { className: 'opt-col-label', textContent: fmtW(cardW) });
+    cwSlider.oninput  = () => { cwLbl.textContent = fmtW(cwSlider.value); };
+    cwSlider.onchange = () => { applyCardWidth(parseFloat(cwSlider.value)); applyLayout(); buildOptions(); };
+    cwRow.appendChild(cwSlider);
+    cwRow.appendChild(cwLbl);
+    flyout.appendChild(cwRow);
+  }
+
+  function applyLinks() {
+    const isNew = (document.documentElement.getAttribute('data-links') || 'new') === 'new';
+    LINK_ELS.forEach(a => {
+      a.target = isNew ? '_blank' : '_self';
+      a.rel    = isNew ? 'noopener noreferrer' : '';
+    });
+  }
+
+  function applyTheme(id) {
+    document.documentElement.setAttribute('data-theme', id);
+    localStorage.setItem('hp-theme', id);
+  }
+
+  function toggleOptions(e) {
+    e.stopPropagation();
+    buildOptions();
+    document.getElementById('optionsFlyout').classList.toggle('open');
+  }
+
+  // Close only when clicking outside the options wrap
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.options-wrap'))
+      document.getElementById('optionsFlyout').classList.remove('open');
+  });
+
+  // ── RESTORE ──
+  (function () {
+    const t  = localStorage.getItem('hp-theme');
+    const l  = localStorage.getItem('hp-layout');
+    const g  = localStorage.getItem('hp-grid');
+    const gw = localStorage.getItem('hp-glow');
+    const lk = localStorage.getItem('hp-links');
+    const cw = localStorage.getItem('hp-card-w');
+    if (t)  applyTheme(t);
+    if (l)  document.documentElement.setAttribute('data-layout', l);
+    if (g)  document.documentElement.setAttribute('data-grid', g);
+    if (gw) document.documentElement.setAttribute('data-glow', gw);
+    if (lk) document.documentElement.setAttribute('data-links', lk);
+    applyCardWidth(cw ? parseFloat(cw) : 15);
+    applyLinks();
+    applyLayout();
+  })();
+</script>
+</body>
+</html>

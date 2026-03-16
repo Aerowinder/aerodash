@@ -1,0 +1,3 @@
+site/config.js
+site/icons/*
+!site/icons/.gitkeep
