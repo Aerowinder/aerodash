@@ -51,7 +51,7 @@ aerodash/
 1. Clone the repo: `git clone https://github.com/Aerowinder/aerodash` or `gh repo clone Aerowinder/aerodash`
 2. Copy `/site/config.example.js` to `/site/config.js`
 3. Edit `/site/config.js` with your services, URLs, and icon paths
-4. Download icons from [selfh.st/icons](https://selfh.st/icons) and place them in `./site/icons/`. If you prefer or need favicons, those are also supported.
+4. Download icons from the links below and place them in `./site/icons/`. If you prefer or need favicons, those are also supported. This step is optional, can you hide all icons if you want.
 5. Serve the `site/` folder from any web server (nginx, Apache, Caddy, etc)
 6. Open it in your browser
 
@@ -76,10 +76,11 @@ All settings are saved to `localStorage` and restored on page load.
 Icons can be local files (`./icons/name.webp`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
 
 Icons are not distributed with Aerodash. The best places to find them are:
-* [selfh.st/icons](https://selfh.st/icons)
-* [Dashboard Icons](https://dashboardicons.com)
+* Site: [selfh.st/icons](https://selfh.st/icons), GitHub: [selfh.st/icons](https://github.com/selfhst/icons)
+* Site: [Dashboard Icons](https://dashboardicons.com), GitHub: [Dashboard Icons](https://github.com/homarr-labs/dashboard-icons)
 
 > Icons from selfh.st are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: [selfh.st/icons](https://selfh.st/icons).
+
 > Icons from Dashboard Icons are licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). Attribution [Dashboard Icons](https://dashboardicons.com).
 
 ---
