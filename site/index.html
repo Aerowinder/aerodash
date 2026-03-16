@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new">
+<html lang="en" data-theme="dark" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new" data-icons="on">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aerodash</title>
 <script src="./config.js"></script>
+<script>
+  // Apply saved theme/settings before first paint to prevent flash
+  (function() {
+    const s = localStorage;
+    const h = document.documentElement;
+    const t  = s.getItem('hp-theme');
+    const l  = s.getItem('hp-layout');
+    const g  = s.getItem('hp-grid');
+    const gw = s.getItem('hp-glow');
+    const lk = s.getItem('hp-links');
+    const ic = s.getItem('hp-icons');
+    if (t)  h.setAttribute('data-theme',  t);
+    if (l)  h.setAttribute('data-layout', l);
+    if (g)  h.setAttribute('data-grid',   g);
+    if (gw) h.setAttribute('data-glow',   gw);
+    if (lk) h.setAttribute('data-links',  lk);
+    if (ic) h.setAttribute('data-icons',  ic);
+  })();
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -114,6 +133,7 @@
     min-width: 3.8rem; flex-shrink: 0;
   }
   .swatch-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .theme-wrap { display: flex; flex-direction: column; gap: 0.25rem; }
   .swatch {
     width: 1.1rem; height: 1.1rem; border-radius: 50%;
     cursor: pointer; border: 2px solid transparent;
@@ -168,7 +188,7 @@
   /* ── SERVICE CARDS ── */
   .service-card {
     display: flex; align-items: center; gap: 0.6rem;
-    width: var(--card-w); padding: 0.6rem 0.75rem;
+    width: var(--card-w); padding: 0.6rem 0.75rem; min-height: 3rem;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 0.5rem; text-decoration: none; color: var(--text);
     white-space: nowrap; overflow: hidden;
@@ -183,6 +203,10 @@
   }
   .service-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.2rem; }
   .service-name { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; }
+
+  [data-icons="off"] .service-icon,
+  [data-icons="off"] .bookmark-favicon,
+  [data-icons="off"] .icon-qmark { display: none; width: 0; margin: 0; }
 
   /* ── VERTICAL LAYOUT ── */
   .service-groups {
@@ -215,6 +239,7 @@
   }
   .bookmark-item:hover { background: var(--surface-hover); border-color: var(--border-focus); }
   .bookmark-favicon { width: 0.8rem; height: 0.8rem; border-radius: 0.12rem; object-fit: contain; flex-shrink: 0; }
+  .icon-qmark-bm { width: 0.8rem; height: 0.8rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; }
   .bm-label { overflow: hidden; text-overflow: ellipsis; }
 
   /* ── ANIMATIONS ── */
@@ -240,7 +265,7 @@
   <header class="topbar">
     <div class="options-wrap">
       <button class="ctrl-btn" id="optionsBtn" onclick="toggleOptions(event)" style="font-size:0.72rem;font-weight:600;letter-spacing:0.05em;padding:0.2rem 0.4rem;">OPTIONS</button>
-      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.15a</div>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.15b</div>
       <div class="options-flyout" id="optionsFlyout"></div>
     </div>
   </header>
@@ -253,17 +278,18 @@
   // ── ICONS ──
   // Load from ./icons/<name>.webp; fall back to ? on error
   function qmark() {
-    return Object.assign(document.createElement('span'), { textContent: '?' });
+    return Object.assign(document.createElement('span'), { className: 'icon-qmark', textContent: '?' });
   }
   function bmFallback(img) { img.replaceWith(qmarkBm()); }
   function qmarkBm() {
     const s = qmark();
-    s.style.cssText = 'width:0.8rem;height:0.8rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.65rem;';
+    s.className = 'icon-qmark icon-qmark-bm';
     return s;
   }
 
   // ── RENDER FROM CONFIG ──
   function renderServices() {
+    if (!CONFIG.services?.length) return;
     const container = document.getElementById('serviceGroups');
     CONFIG.services.forEach(({ group, items }) => {
       const g = el('div', { className: 'service-group' });
@@ -290,6 +316,7 @@
   }
 
   function renderBookmarks() {
+    if (!CONFIG.bookmarks?.length) return;
     const container = document.getElementById('bookmarksGrid');
     CONFIG.bookmarks.forEach(({ group, items }) => {
       const g = el('div', { className: 'bookmark-group' });
@@ -315,8 +342,9 @@
   renderServices();
   renderBookmarks();
 
-  // Cache after render since elements are created dynamically
-  const LINK_ELS = document.querySelectorAll('.service-card, .bookmark-item');
+  // Cache after render — these never change
+  const LINK_ELS      = document.querySelectorAll('.service-card, .bookmark-item');
+  const SERVICE_GROUP_COUNT = document.querySelectorAll('.service-group').length;
 
   // ── LAYOUT SIZING ──
   let CARD_W = parseFloat(localStorage.getItem('hp-card-w') || '15');
@@ -338,7 +366,7 @@
     const fits  = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
 
     // In vertical mode, also cap to actual number of groups so partial rows center correctly
-    const groupCount = isH ? Infinity : document.querySelectorAll('.service-group').length;
+    const groupCount = isH ? Infinity : SERVICE_GROUP_COUNT;
     const cols  = Math.min(n, fits, groupCount);
     document.getElementById('content').style.width = (cols * rem2px(CARD_W) + (cols - 1) * rem2px(gap)) + 'px';
   }
@@ -382,7 +410,7 @@
 
   // Render themes as 2 rows of 6 swatches
   function themeRows(group, current) {
-    const wrap = el('div', { style: 'display:flex;flex-direction:column;gap:0.25rem;' });
+    const wrap = el('div', { className: 'theme-wrap' });
     for (let r = 0; r < 2; r++) {
       const row = el('div', { className: 'swatch-row' });
       THEMES[group].slice(r * 6, r * 6 + 6).forEach(t => {
@@ -409,10 +437,13 @@
 
   function buildOptions() {
     const flyout  = document.getElementById('optionsFlyout');
-    const current = document.documentElement.getAttribute('data-theme') || 'dark';
-    const grid    = document.documentElement.getAttribute('data-grid') || 'off';
-    const glow    = document.documentElement.getAttribute('data-glow') || 'off';
-    const layout  = document.documentElement.getAttribute('data-layout') || 'horizontal';
+    const h       = document.documentElement;
+    const current = h.getAttribute('data-theme')  || 'dark';
+    const grid    = h.getAttribute('data-grid')   || 'off';
+    const glow    = h.getAttribute('data-glow')   || 'off';
+    const layout  = h.getAttribute('data-layout') || 'horizontal';
+    const icons   = h.getAttribute('data-icons')  || 'on';
+    const links   = h.getAttribute('data-links')  || 'new';
     const cols    = parseInt(localStorage.getItem('hp-cols') || '5');
     flyout.innerHTML = '';
 
@@ -423,6 +454,16 @@
       row.appendChild(themeRows(group, current));
       flyout.appendChild(row);
     });
+
+    // ICONS
+    const iconsRow = el('div', { className: 'opt-row' });
+    iconsRow.appendChild(el('span', { className: 'opt-label', textContent: 'Icons' }));
+    ['on','off'].forEach(v => iconsRow.appendChild(btn(v, icons===v, () => {
+      document.documentElement.setAttribute('data-icons', v);
+      localStorage.setItem('hp-icons', v);
+      buildOptions();
+    })));
+    flyout.appendChild(iconsRow);
 
     // GRID
     const gridRow = el('div', { className: 'opt-row' });
@@ -456,7 +497,6 @@
     flyout.appendChild(modeRow);
 
     // LINKS
-    const links = document.documentElement.getAttribute('data-links') || 'new';
     const linksRow = el('div', { className: 'opt-row' });
     linksRow.appendChild(el('span', { className: 'opt-label', textContent: 'Links' }));
     ['new tab','same tab'].forEach((label, i) => {
@@ -521,18 +561,10 @@
   });
 
   // ── RESTORE ──
+  // Attributes already applied in <head> to prevent flash.
+  // Here we just run the functions that depend on the DOM being ready.
   (function () {
-    const t  = localStorage.getItem('hp-theme');
-    const l  = localStorage.getItem('hp-layout');
-    const g  = localStorage.getItem('hp-grid');
-    const gw = localStorage.getItem('hp-glow');
-    const lk = localStorage.getItem('hp-links');
     const cw = localStorage.getItem('hp-card-w');
-    if (t)  applyTheme(t);
-    if (l)  document.documentElement.setAttribute('data-layout', l);
-    if (g)  document.documentElement.setAttribute('data-grid', g);
-    if (gw) document.documentElement.setAttribute('data-glow', gw);
-    if (lk) document.documentElement.setAttribute('data-links', lk);
     applyCardWidth(cw ? parseFloat(cw) : 15);
     applyLinks();
     applyLayout();
