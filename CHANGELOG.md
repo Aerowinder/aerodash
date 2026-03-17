@@ -1,3 +1,8 @@
+# 2026.03.17b
+* Reduced number of themes from 24 to 12.
+* Themes are now more saturated/colorful and more distinct from each other.
+* Made some changes to improve performance by reducing repeated function calls, particularly when resizing the browser window.
+
 # 2026.03.17a
 * Cleaned up rendering code in an effort to prevent occasional improper loading.
 

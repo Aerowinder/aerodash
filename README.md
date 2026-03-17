@@ -8,13 +8,15 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 
 ## Features
 
-- **Services and Bookmarks**: Services for self-hosted apps, bookmarks for web links
-- **Horizontal & vertical layouts**: card-per-row grid or traditional columns
-- **24 themes**: 12 dark, 12 light, with matching accents and grid colors
-- **Local icons**: download links below
-- **Optional icons**: Icons can be disabled completely if you'd rather not have them
-- **Persistent settings**: all preferences saved to localStorage
-- **External config**: services and bookmarks live in `config.js`, never touch `index.html`
+- **Services & bookmarks**: self-hosted apps and web links, grouped and organized your way
+- **Multi-page support**: separate tabs for home, work, or whatever you need
+- **Horizontal & vertical layouts**: card-per-row grid or traditional column view
+- **Responsive UI**: column count automatically lowers to fit mobile devices when necessary
+- **12 themes**: 6 dark, 6 light, paired by color family
+- **Local icon support**: download links provided below, or use external resources like favicons
+- **Icons toggle**: disable icons entirely for a cleaner text-only look
+- **Persistent settings**: layout, theme, and display preferences are saved across sessions
+- **Separate config**: your services and bookmarks live in `config.js`, never touched by updates
 
 ---
 
@@ -43,8 +45,8 @@ aerodash/
     ├── config.js          ← your config (gitignored)
     ├── config.example.js
     └── icons/             ← your icons (gitignored)
-        ├── jellyfin.webp
-        ├── sonarr.webp
+        ├── jellyfin.svg
+        ├── sonarr.svg
         └── ...
 ```
 
@@ -73,7 +75,7 @@ All settings are saved to `localStorage` and restored on page load.
 
 ## Icons
 
-Icons can be local files (`./icons/name.webp`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
+Icons can be local files (`./icons/name.svg`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
 
 Icons are not distributed with Aerodash. The best places to find them are:
 * Site: [selfh.st/icons](https://selfh.st/icons), GitHub: [selfh.st/icons](https://github.com/selfhst/icons)
@@ -101,15 +103,15 @@ const CONFIG = {
         {
           group: 'Media',
           items: [
-            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.webp' },
-            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.webp' },
+            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.svg' },
+            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.svg' },
           ]
         },
         {
           group: 'Infrastructure',
           items: [
-            { name: 'Portainer',       url: '#', icon: './icons/portainer.webp' },
-            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.webp' },
+            { name: 'Portainer',       url: '#', icon: './icons/portainer.svg' },
+            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.svg' },
           ]
         },
       ],
@@ -117,15 +119,15 @@ const CONFIG = {
         {
           group: 'Dev Tools',
           items: [
-            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.webp' },
-            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.webp' },
+            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.svg' },
+            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.svg' },
           ]
         },
         {
           group: 'Utilities',
           items: [
-            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.webp' },
-            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.webp' },
+            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.svg' },
+            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.svg' },
           ]
         },
       ],
@@ -145,15 +147,15 @@ const CONFIG = {
         {
           group: 'Media',
           items: [
-            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.webp' },
-            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.webp' },
+            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.svg' },
+            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.svg' },
           ]
         },
         {
           group: 'Infrastructure',
           items: [
-            { name: 'Portainer',       url: '#', icon: './icons/portainer.webp' },
-            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.webp' },
+            { name: 'Portainer',       url: '#', icon: './icons/portainer.svg' },
+            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.svg' },
           ]
         },
       ],
@@ -161,15 +163,15 @@ const CONFIG = {
         {
           group: 'Dev Tools',
           items: [
-            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.webp' },
-            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.webp' },
+            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.svg' },
+            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.svg' },
           ]
         },
         {
           group: 'Utilities',
           items: [
-            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.webp' },
-            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.webp' },
+            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.svg' },
+            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.svg' },
           ]
         },
       ],
@@ -180,15 +182,15 @@ const CONFIG = {
         {
           group: 'Downloads',
           items: [
-            { name: 'qBittorrent',     url: '#', icon: './icons/qbittorrent.webp' },
-            { name: 'SABnzbd',         url: '#', icon: './icons/sabnzbd.webp' },
+            { name: 'qBittorrent',     url: '#', icon: './icons/qbittorrent.svg' },
+            { name: 'SABnzbd',         url: '#', icon: './icons/sabnzbd.svg' },
           ]
         },
         {
           group: 'Home',
           items: [
-            { name: 'Home Assistant',  url: '#', icon: './icons/home-assistant.webp' },
-            { name: 'Immich',          url: '#', icon: './icons/immich.webp' },
+            { name: 'Home Assistant',  url: '#', icon: './icons/home-assistant.svg' },
+            { name: 'Immich',          url: '#', icon: './icons/immich.svg' },
           ]
         },
       ],
@@ -196,16 +198,16 @@ const CONFIG = {
         {
           group: 'News & Reading',
           items: [
-            { name: 'Hacker News',     url: 'https://news.ycombinator.com',  icon: './icons/hacker-news.webp' },
-            { name: 'TLDP',            url: 'https://tldp.org',              icon: './icons/tldp.webp' },
+            { name: 'Hacker News',     url: 'https://news.ycombinator.com',  icon: './icons/hacker-news.svg' },
+            { name: 'TLDP',            url: 'https://tldp.org',              icon: './icons/tldp.svg' },
           ]
         },
         {
           group: 'Reference',
           items: [
-            { name: 'Arch Wiki',       url: 'https://wiki.archlinux.org',    icon: './icons/arch-linux.webp' },
-            { name: 'Docker Docs',     url: 'https://docs.docker.com',       icon: './icons/docker.webp' },
-            { name: 'Noted.lol',       url: 'https://noted.lol',             icon: './icons/noted.webp' },
+            { name: 'Arch Wiki',       url: 'https://wiki.archlinux.org',    icon: './icons/arch-linux.svg' },
+            { name: 'Docker Docs',     url: 'https://docs.docker.com',       icon: './icons/docker.svg' },
+            { name: 'Noted.lol',       url: 'https://noted.lol',             icon: './icons/noted.svg' },
           ]
         },
       ] 
