@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="./icons/aerodash.svg">
 <title>Aerodash</title>
 <script src="./config.js"></script>
 <script>
@@ -13,10 +14,14 @@
       const v = localStorage.getItem('hp-' + a);
       if (v) h.setAttribute('data-' + a, v);
     });
+    // Block transitions during initial render to prevent theme flash
+    h.classList.add('no-transition');
+    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
   })();
 </script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
 
   html { font-size: 20px; }
 
@@ -299,7 +304,7 @@
   <header class="bottombar">
     <div class="options-wrap">
       <button class="ctrl-btn options-btn" id="optionsBtn" onclick="toggleOptions(event)">OPTIONS</button>
-      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16b</div>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16c</div>
       <div class="options-flyout" id="optionsFlyout"></div>
     </div>
   </header>
