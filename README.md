@@ -8,27 +8,23 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 
 ## Features
 
-- **Services & bookmarks**: self-hosted apps and web links, grouped and organized your way
+- **Cards**: all your apps and links, grouped and organized your way
 - **Multi-page support**: separate tabs for home, work, or whatever you need
 - **Horizontal & vertical layouts**: card-per-row grid or traditional column view
-- **Responsive UI**: column count automatically lowers to fit mobile devices when necessary
+- **Responsive**: column count automatically adjusts to fit your screen width
 - **12 themes**: 6 dark, 6 light, paired by color family
-- **Local icon support**: download links provided below, or use external resources like favicons
-- **Icons toggle**: disable icons entirely for a cleaner text-only look
-- **Persistent settings**: layout, theme, and display preferences are saved across sessions
-- **Separate config**: your services and bookmarks live in `config.js`, never touched by updates
+- **Local icon support**: download links provided below, or use external URLs like favicons
+- **Icons optional**: disable icons entirely for a cleaner text-only look
+- **Persistent settings**: layout, theme, and display preferences saved across sessions
+- **Separate config**: your cards live in `config.js`, never touched by updates
 
 ---
 
 ## Screenshots
 
-**Services**
+**Cards**
 
-![Services view showing homelab apps in horizontal grid layout](images/services.png)
-
-**Bookmarks**
-
-![Bookmark groups showing external links with icons](images/bookmarks.png)
+![Cards showing homelab apps in horizontal grid layout](images/cards.png)
 
 **Options**
 
@@ -53,168 +49,89 @@ aerodash/
 1. Clone the repo: `git clone https://github.com/Aerowinder/aerodash` or `gh repo clone Aerowinder/aerodash`
 2. Copy `/site/config.example.js` to `/site/config.js`
 3. Edit `/site/config.js` with your services, URLs, and icon paths
-4. Download icons from the links below and place them in `./site/icons/`. If you prefer or need favicons, those are also supported. This step is optional, can you hide all icons if you want.
-5. Serve the `site/` folder from any web server (nginx, Apache, Caddy, etc)
+4. Download icons from the links below and place them in `./site/icons/`. Favicons are also supported. This step is optional — icons can be hidden entirely if you prefer.
+5. Serve the `site/` folder from any web server (nginx, Apache, Caddy, etc.)
 6. Open it in your browser
 
 ---
 
-## Services
-
-Services are your self-hosted apps, grouped by category, each with a name, URL, and icon. Clicking a card opens the URL in a new tab (or same tab, depending on your Links setting).
-
-## Bookmarks
-
-Bookmarks are the same as services. The only difference is the size of the card.
-
 ## Options
 
-The `OPTIONS` are hiding at the bottom center of Aerodash. The text is a button, click it to reveal the changeable settings.
-
-All settings are saved to `localStorage` and restored on page load.
+The `OPTIONS` button is at the bottom center of the page. Click it to reveal all settings. Everything is saved to `localStorage` and restored on page load.
 
 ## Icons
 
 Icons can be local files (`./icons/name.svg`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
 
 Icons are not distributed with Aerodash. The best places to find them are:
-* Site: [selfh.st/icons](https://selfh.st/icons), GitHub: [selfh.st/icons](https://github.com/selfhst/icons)
-* Site: [Dashboard Icons](https://dashboardicons.com), GitHub: [Dashboard Icons](https://github.com/homarr-labs/dashboard-icons)
 
-> Icons from selfh.st are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: [selfh.st/icons](https://selfh.st/icons).
+- Site: [selfh.st/icons](https://selfh.st/icons) · GitHub: [selfhst/icons](https://github.com/selfhst/icons)
+- Site: [Dashboard Icons](https://dashboardicons.com) · GitHub: [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
 
-> Icons from Dashboard Icons are licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). Attribution [Dashboard Icons](https://dashboardicons.com).
+> Icons from selfh.st are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+> Icons from Dashboard Icons are licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ---
 
 ## config.js
 
-All your services and bookmarks live here. The git has a fully populated `config.example.js`, but here is a snippet so you can see how to make changes. 
+All your content lives here. The structure is:
 
+- **Tabs** are pages. If you only have one page, the tab bar is hidden automatically.
+- **Cards** are groups of links within a page, each with a title and a list of items.
+- **Items** are individual links — a name, URL, and optional icon.
+- **Dividers** are optional visual separators between card groups. Use `{ divider: true }` between any two groups.
 
-This configuration example has 1 page (tab). Since it only has one tab, the tab selection will be hidden, but the structuring for the tabs must remain in the config.
+A fully populated `config.example.js` is included in the repo. Here's a minimal example showing all the concepts:
+
 ```js
 const CONFIG = {
 
-  pages: [
+  tabs: [
     {
-      name: 'TAB 1',
-      services: [
+      name: 'Home',
+      cards: [
         {
           group: 'Media',
           items: [
-            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.svg' },
-            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.svg' },
+            { name: 'Jellyfin',   url: 'http://jellyfin.local',  icon: './icons/jellyfin.svg'  },
+            { name: 'Sonarr',     url: 'http://sonarr.local',    icon: './icons/sonarr.svg'    },
           ]
         },
         {
           group: 'Infrastructure',
           items: [
-            { name: 'Portainer',       url: '#', icon: './icons/portainer.svg' },
-            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.svg' },
+            { name: 'Portainer',  url: 'http://portainer.local', icon: './icons/portainer.svg' },
           ]
         },
-      ],
-      bookmarks: [
+        { divider: true },
         {
-          group: 'Dev Tools',
+          group: 'Links',
           items: [
-            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.svg' },
-            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.svg' },
+            { name: 'GitHub',     url: 'https://github.com',     icon: './icons/github.svg'    },
+            { name: 'Speedtest',  url: 'https://speedtest.net',  icon: './icons/speedtest.svg' },
           ]
         },
+      ]
+    },
+    {
+      name: 'Work',
+      cards: [
         {
-          group: 'Utilities',
+          group: 'Tools',
           items: [
-            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.svg' },
-            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.svg' },
+            { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/gitea.svg'     },
           ]
         },
-      ],
+      ]
     },
   ]
+
 };
 ```
 
-This configuration example has 2 pages (tabs). All tabs can have services and/or bookmarks. In this multi-tab configuration, a navigation block will appear at the top center of the site.
-```js
-const CONFIG = {
-
-  pages: [
-    {
-      name: 'TAB 1',
-      services: [
-        {
-          group: 'Media',
-          items: [
-            { name: 'Jellyfin',        url: '#', icon: './icons/jellyfin.svg' },
-            { name: 'Sonarr',          url: '#', icon: './icons/sonarr.svg' },
-          ]
-        },
-        {
-          group: 'Infrastructure',
-          items: [
-            { name: 'Portainer',       url: '#', icon: './icons/portainer.svg' },
-            { name: 'Nginx Proxy',     url: '#', icon: './icons/nginx-proxy-manager.svg' },
-          ]
-        },
-      ],
-      bookmarks: [
-        {
-          group: 'Dev Tools',
-          items: [
-            { name: 'GitHub',          url: 'https://github.com',            icon: './icons/github.svg' },
-            { name: 'Stack Overflow',  url: 'https://stackoverflow.com',     icon: './icons/stack-overflow.svg' },
-          ]
-        },
-        {
-          group: 'Utilities',
-          items: [
-            { name: 'Speedtest',       url: 'https://speedtest.net',         icon: './icons/speedtest.svg' },
-            { name: 'Excalidraw',      url: 'https://excalidraw.com',        icon: './icons/excalidraw.svg' },
-          ]
-        },
-      ],
-    },
-    {
-      name: 'TAB 2',
-      services: [
-        {
-          group: 'Downloads',
-          items: [
-            { name: 'qBittorrent',     url: '#', icon: './icons/qbittorrent.svg' },
-            { name: 'SABnzbd',         url: '#', icon: './icons/sabnzbd.svg' },
-          ]
-        },
-        {
-          group: 'Home',
-          items: [
-            { name: 'Home Assistant',  url: '#', icon: './icons/home-assistant.svg' },
-            { name: 'Immich',          url: '#', icon: './icons/immich.svg' },
-          ]
-        },
-      ],
-      bookmarks: [
-        {
-          group: 'News & Reading',
-          items: [
-            { name: 'Hacker News',     url: 'https://news.ycombinator.com',  icon: './icons/hacker-news.svg' },
-            { name: 'TLDP',            url: 'https://tldp.org',              icon: './icons/tldp.svg' },
-          ]
-        },
-        {
-          group: 'Reference',
-          items: [
-            { name: 'Arch Wiki',       url: 'https://wiki.archlinux.org',    icon: './icons/arch-linux.svg' },
-            { name: 'Docker Docs',     url: 'https://docs.docker.com',       icon: './icons/docker.svg' },
-            { name: 'Noted.lol',       url: 'https://noted.lol',             icon: './icons/noted.svg' },
-          ]
-        },
-      ] 
-    },
-  ]
-};
-```
+---
 
 ## Updating
 
