@@ -5,20 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="./icons/aerodash.svg">
 <title>Aerodash</title>
-<script>
-  // Apply saved settings before first paint to prevent flash
-  (function() {
-    const h = document.documentElement;
-    ['theme','layout','grid','glow','links','icons','anim'].forEach(a => {
-      const v = localStorage.getItem('hp-' + a);
-      if (v) h.setAttribute('data-' + a, v);
-    });
-    // Block transitions during initial render to prevent theme flash
-    h.classList.add('no-transition');
-    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
-  })();
-</script>
-<script src="./config.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
@@ -286,6 +272,22 @@
     letter-spacing: 0.05em; padding: 0.2rem 0.4rem;
   }
 </style>
+<script>
+  // Apply saved settings before first paint to prevent flash
+  (function() {
+    const h = document.documentElement;
+    ['theme','layout','grid','glow','links','icons','anim'].forEach(a => {
+      const v = localStorage.getItem('hp-' + a);
+      if (v) h.setAttribute('data-' + a, v);
+    });
+    // Block transitions during initial render to prevent theme flash
+    h.classList.add('no-transition');
+    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
+  })();
+</script>
+<script src="./config.js"></script>
+
+
 </head>
 <body>
 <div class="glow"></div>
@@ -304,7 +306,7 @@
   <header class="bottombar">
     <div class="options-wrap">
       <button class="ctrl-btn options-btn" id="optionsBtn" onclick="toggleOptions(event)">OPTIONS</button>
-      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.16c</div>
+      <div style="font-size:0.52rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.04em;">Aerodash - v2026.03.17a</div>
       <div class="options-flyout" id="optionsFlyout"></div>
     </div>
   </header>

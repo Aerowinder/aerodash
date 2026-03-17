@@ -1,3 +1,6 @@
+# 2026.03.17a
+* Cleaned up rendering code in an effort to prevent occasional improper loading.
+
 # 2026.03.16c
 * Added favicon.
 * Cleaned up rendering code in an effort to prevent occasional improper loading.
