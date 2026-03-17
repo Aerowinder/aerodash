@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="./icons/aerodash.svg">
 <title>Aerodash</title>
-<script src="./config.js"></script>
 <script>
   // Apply saved settings before first paint to prevent flash
   (function() {
@@ -19,6 +18,7 @@
     requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
   })();
 </script>
+<script src="./config.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
