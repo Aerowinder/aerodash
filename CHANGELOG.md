@@ -6,6 +6,8 @@
 * Added slider option to adjust Card height.
 * Expanded existing count and width sliders to accomodate more setups.
 * Added divider support as a visual aid to separate cards. To use, specify `{ divider: true },` between card groups in the `cards:` array in `config.js`
+* Tweaked glow setting, making it more pronounced.
+* Corrected issues with themes using incorrect accent colors.
 * Significant code cleanup, orphaned code removed, ~100 lines removed
 
 # 2026.03.17b
