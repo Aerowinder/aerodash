@@ -2,8 +2,6 @@
 
 Aerodash is a clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). Organize your apps and links into card groups across multiple tabs, choose between horizontal and vertical layouts, and pick from 12 carefully tuned themes; 6 dark, 6 light. Icons can be set per-item or disabled globally for a cleaner look. Stealth Mode hides card backgrounds and borders at rest, leaving only the content visible until you hover over it. Everything is highly configurable, including options like glow, grid, animations, card sizing, and more. All settings are saved across sessions. Your card config lives in `config.js` and is never touched by updates.
 
-A clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). No frameworks, no dependencies, no build steps. Just download and run.
-
 This project is vibe coded. The heavy lifting is done by LLMs with my oversight and extensive testing. It actually started as kind of a meme, to see how close I could get this dashboard to my previous setup with minimal prompting. To my surprise, the LLM got very close on the first try with an undetailed prompt, so I decided to take it further.
 
 ---
