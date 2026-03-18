@@ -1,23 +1,10 @@
 # Aerodash
 
+Aerodash is a clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). Organize your apps and links into card groups across multiple tabs, choose between horizontal and vertical layouts, and pick from 12 carefully tuned themes; 6 dark, 6 light. Icons can be set per-item or disabled globally for a cleaner look. Stealth Mode hides card backgrounds and borders at rest, leaving only the content visible until you hover over it. Everything is highly configurable, including options like glow, grid, animations, card sizing, and more. All settings are saved across sessions. Your card config lives in `config.js` and is never touched by updates.
+
 A clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). No frameworks, no dependencies, no build steps. Just download and run.
 
 This project is vibe coded. The heavy lifting is done by LLMs with my oversight and extensive testing. It actually started as kind of a meme, to see how close I could get this dashboard to my previous setup with minimal prompting. To my surprise, the LLM got very close on the first try with an undetailed prompt, so I decided to take it further.
-
----
-
-## Features
-
-- **Cards**: all your apps and links, grouped and organized your way
-- **Multi-page support**: separate tabs for home, work, or whatever you need
-- **Horizontal & vertical layouts**: card-per-row grid or traditional column view
-- **Responsive**: column count automatically adjusts to fit your screen width
-- **12 themes**: 6 dark, 6 light, paired by color family
-- **Local icon support**: download links provided below, or use external URLs like favicons
-- **Per-item icon control**: omit the icon field on any item to display it without an icon slot
-- **Global icon optional**: disable icons entirely for a cleaner text-only look across the entire page
-- **Persistent settings**: layout, theme, and display preferences saved across sessions
-- **Separate config**: your cards live in `config.js`, never touched by updates
 
 ---
 
@@ -106,12 +93,12 @@ const CONFIG = {
             { name: 'Portainer',  url: 'http://portainer.local', icon: './icons/portainer.svg' },
           ]
         },
-        { divider: true }, /* Create a thin divider for visual separation of cards. */
+        { divider: true },
         {
           group: 'Links',
           items: [
             { name: 'GitHub',     url: 'https://github.com',     icon: './icons/github.svg'    },
-            { name: 'Speedtest',  url: 'https://speedtest.net', }, /* icon: property removed. Card will appear with no icon. */
+            { name: 'Speedtest',  url: 'https://speedtest.net',  icon: './icons/speedtest.svg' },
           ]
         },
       ]
@@ -122,7 +109,7 @@ const CONFIG = {
         {
           group: 'Tools',
           items: [
-            { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/invalid-path.svg'     }, /* This icon path does not exist. Card will appear with no icon. */
+            { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/gitea.svg'     },
           ]
         },
       ]
@@ -136,10 +123,8 @@ const CONFIG = {
 
 ## Updating
 
-Updating is simple, and updates will never overwrite your configuration:
+Since `/site/config.js` and `/site/icons/` are gitignored, pulling updates will never overwrite your data:
 
 ```bash
 git pull
 ```
-
-After the pull, just refresh the browser window. You don't need to do anything else.
