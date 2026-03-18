@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark-slate" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new" data-icons="on" data-anim="on">
+<html lang="en" data-theme="dark-slate" data-layout="horizontal" data-grid="off" data-glow="off" data-links="new" data-icons="on" data-anim="on" data-stealth="off">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,25 +13,25 @@
   html { font-size: 20px; }
 
   /* ── THEMES ── */
-  :root, [data-theme="dark-slate"]    { --bg:#0d1117; --surface:rgba(255,255,255,0.06); --surface-hover:rgba(255,255,255,0.11); --border:rgba(255,255,255,0.15); --border-focus:rgba(148,163,184,0.7);  --text:#e2e8f0; --muted:#64748b; --accent:#94a3b8; --accent2:#cbd5e1; --grid-color:rgba(99,102,241,0.04);  --glow-color:rgba(99,102,241,0.10);  }
-  [data-theme="dark-blue"]            { --bg:#060c1e; --surface:rgba(255,255,255,0.07); --surface-hover:rgba(255,255,255,0.12); --border:rgba(120,150,255,0.22); --border-focus:rgba(99,102,241,0.6);   --text:#c8d8f0; --muted:#5a6f8a; --accent:#2563eb; --accent2:#1d4ed8; --grid-color:rgba(100,130,220,0.05); --glow-color:rgba(100,130,220,0.12); }
-  [data-theme="dark-orange"]          { --bg:#180d05; --surface:rgba(255,255,255,0.07); --surface-hover:rgba(255,255,255,0.12); --border:rgba(249,115,22,0.25);  --border-focus:rgba(249,115,22,0.6);   --text:#eeddd0; --muted:#8a6040; --accent:#f97316; --accent2:#fb923c; --grid-color:rgba(249,115,22,0.05);  --glow-color:rgba(249,115,22,0.12);  }
-  [data-theme="dark-teal"]            { --bg:#051210; --surface:rgba(255,255,255,0.07); --surface-hover:rgba(255,255,255,0.12); --border:rgba(20,184,166,0.25);  --border-focus:rgba(20,184,166,0.6);   --text:#c8ede8; --muted:#4a8a80; --accent:#14b8a6; --accent2:#2dd4bf; --grid-color:rgba(20,184,166,0.05);  --glow-color:rgba(20,184,166,0.12);  }
-  [data-theme="dark-rose"]            { --bg:#18050e; --surface:rgba(255,255,255,0.07); --surface-hover:rgba(255,255,255,0.12); --border:rgba(244,63,94,0.25);   --border-focus:rgba(244,63,94,0.6);    --text:#eed0d8; --muted:#8a5060; --accent:#f43f5e; --accent2:#fb7185; --grid-color:rgba(244,63,94,0.05);   --glow-color:rgba(244,63,94,0.12);   }
-  [data-theme="dark-purple"]          { --bg:#0e0818; --surface:rgba(255,255,255,0.07); --surface-hover:rgba(255,255,255,0.12); --border:rgba(168,85,247,0.25);  --border-focus:rgba(168,85,247,0.6);   --text:#e8d8f8; --muted:#7850a0; --accent:#a855f7; --accent2:#c084fc; --grid-color:rgba(168,85,247,0.05);  --glow-color:rgba(168,85,247,0.12);  }
-  [data-theme="light-slate"]          { --bg:#f1f5f9; --surface:rgba(0,0,0,0.05);       --surface-hover:rgba(0,0,0,0.09);       --border:rgba(0,0,0,0.18);       --border-focus:rgba(99,102,241,0.5);   --text:#1e293b; --muted:#64748b; --accent:#94a3b8; --accent2:#cbd5e1; --grid-color:rgba(99,102,241,0.05);  --glow-color:rgba(99,102,241,0.06);  }
-  [data-theme="light-blue"]           { --bg:#ddeeff; --surface:rgba(0,0,0,0.06);       --surface-hover:rgba(0,0,0,0.10);       --border:rgba(0,0,0,0.16);       --border-focus:rgba(37,99,235,0.5);    --text:#0a1e38; --muted:#3a6090; --accent:#2563eb; --accent2:#1d4ed8; --grid-color:rgba(37,99,235,0.06);   --glow-color:rgba(37,99,235,0.08);   }
-  [data-theme="light-orange"]         { --bg:#fff4e6; --surface:rgba(0,0,0,0.05);       --surface-hover:rgba(0,0,0,0.09);       --border:rgba(0,0,0,0.16);       --border-focus:rgba(249,115,22,0.5);   --text:#2a1200; --muted:#9a6030; --accent:#f97316; --accent2:#fb923c; --grid-color:rgba(249,115,22,0.05);  --glow-color:rgba(249,115,22,0.07);  }
-  [data-theme="light-teal"]           { --bg:#daf5f0; --surface:rgba(0,0,0,0.06);       --surface-hover:rgba(0,0,0,0.10);       --border:rgba(0,0,0,0.16);       --border-focus:rgba(20,184,166,0.5);   --text:#082820; --muted:#2a7a70; --accent:#14b8a6; --accent2:#2dd4bf; --grid-color:rgba(20,184,166,0.06);  --glow-color:rgba(20,184,166,0.08);  }
-  [data-theme="light-rose"]           { --bg:#fff0f4; --surface:rgba(0,0,0,0.05);       --surface-hover:rgba(0,0,0,0.09);       --border:rgba(0,0,0,0.16);       --border-focus:rgba(244,63,94,0.5);    --text:#2a0a18; --muted:#a05070; --accent:#f43f5e; --accent2:#fb7185; --grid-color:rgba(244,63,94,0.05);   --glow-color:rgba(244,63,94,0.07);   }
-  [data-theme="light-purple"]         { --bg:#ede0ff; --surface:rgba(0,0,0,0.06);       --surface-hover:rgba(0,0,0,0.10);       --border:rgba(0,0,0,0.16);       --border-focus:rgba(168,85,247,0.5);   --text:#1e0a38; --muted:#7050a0; --accent:#a855f7; --accent2:#c084fc; --grid-color:rgba(168,85,247,0.06);  --glow-color:rgba(168,85,247,0.08);  }
+  :root, [data-theme="dark-slate"]    { --bg:#0d1117; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15); --text:#e2e8f0; --muted:#4a5568; --accent:#6a7d90; --grid-color:rgba(99,102,241,0.04);  --glow-color:rgba(99,102,241,0.10);  }
+  [data-theme="dark-blue"]            { --bg:#060c1e; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15); --text:#c8d8f0; --muted:#465870; --accent:#5888c0; --grid-color:rgba(100,130,220,0.05); --glow-color:rgba(100,130,220,0.12); }
+  [data-theme="dark-orange"]          { --bg:#180d05; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15);  --text:#eeddd0; --muted:#6b5040; --accent:#b07848; --grid-color:rgba(249,115,22,0.05);  --glow-color:rgba(249,115,22,0.12);  }
+  [data-theme="dark-teal"]            { --bg:#051210; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15);  --text:#c8ede8; --muted:#3a6860; --accent:#409888; --grid-color:rgba(20,184,166,0.05);  --glow-color:rgba(20,184,166,0.12);  }
+  [data-theme="dark-rose"]            { --bg:#18050e; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15);   --text:#eed0d8; --muted:#6b4050; --accent:#b05868; --grid-color:rgba(244,63,94,0.05);   --glow-color:rgba(244,63,94,0.12);   }
+  [data-theme="dark-purple"]          { --bg:#0e0818; --card-bg:rgba(255,255,255,0.10); --card-bghover:rgba(255,255,255,0.15);  --text:#e8d8f8; --muted:#5a4070; --accent:#7858b0; --grid-color:rgba(168,85,247,0.05);  --glow-color:rgba(168,85,247,0.12);  }
+  [data-theme="light-slate"]          { --bg:#f1f5f9; --card-bg:rgba(0,0,0,0.08);       --card-bghover:rgba(0,0,0,0.13);             --text:#1e293b; --muted:#94a3b8; --accent:#607888; --grid-color:rgba(99,102,241,0.05);  --glow-color:rgba(99,102,241,0.06);  }
+  [data-theme="light-blue"]           { --bg:#ddeeff; --card-bg:rgba(0,0,0,0.08);       --card-bghover:rgba(0,0,0,0.13);             --text:#0a1e38; --muted:#7090b8; --accent:#204878; --grid-color:rgba(37,99,235,0.06);   --glow-color:rgba(37,99,235,0.08);   }
+  [data-theme="light-orange"]         { --bg:#fff4e6; --card-bg:rgba(0,0,0,0.07);       --card-bghover:rgba(0,0,0,0.12);             --text:#2a1200; --muted:#c09060; --accent:#703800; --grid-color:rgba(249,115,22,0.05);  --glow-color:rgba(249,115,22,0.07);  }
+  [data-theme="light-teal"]           { --bg:#daf5f0; --card-bg:rgba(0,0,0,0.08);       --card-bghover:rgba(0,0,0,0.13);             --text:#082820; --muted:#60a898; --accent:#104840; --grid-color:rgba(20,184,166,0.06);  --glow-color:rgba(20,184,166,0.08);  }
+  [data-theme="light-rose"]           { --bg:#fff0f4; --card-bg:rgba(0,0,0,0.07);       --card-bghover:rgba(0,0,0,0.12);             --text:#2a0a18; --muted:#c080a0; --accent:#681838; --grid-color:rgba(244,63,94,0.05);   --glow-color:rgba(244,63,94,0.07);   }
+  [data-theme="light-purple"]         { --bg:#ede0ff; --card-bg:rgba(0,0,0,0.08);       --card-bghover:rgba(0,0,0,0.13);             --text:#1e0a38; --muted:#a888cc; --accent:#3a1868; --grid-color:rgba(168,85,247,0.06);  --glow-color:rgba(168,85,247,0.08);  }
 
   /* ── BASE ── */
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 300; background: var(--bg); color: var(--text);
     min-height: 100vh; overflow-x: hidden;
-    transition: background 0.25s, color 0.25s;
+    transition: background 0.25s;
   }
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -59,40 +59,42 @@
   /* ── BOTTOMBAR ── */
   .bottombar {
     display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    padding: 0.7rem 1.5rem; border-top: 1px solid var(--border);
-    margin-top: 2rem; transition: border-color 0.25s;
+    padding: 0.7rem 1.5rem;
+    margin-top: 2rem;
   }
 
   /* ── TABBAR ── */
   .tabbar {
     display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    padding: 0.7rem 0; border-bottom: 1px solid var(--border);
-    margin-bottom: 1.4rem; transition: border-color 0.25s;
+    padding: 0.7rem 0;
+    margin-bottom: 1.4rem;
   }
   .tab-btn {
     background: none; border: none; cursor: pointer;
     font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
-    color: var(--muted); padding: 0.2rem 0.4rem; border-radius: 0.25rem;
-    transition: color 0.15s;
+    color: var(--muted); opacity: 0.7; padding: 0.2rem 0.4rem; border-radius: 0.25rem;
+    transition: color 0.15s, opacity 0.15s;
   }
-  .tab-btn:hover  { color: var(--accent2); }
-  .tab-btn.active { color: var(--text); }
+  .tab-btn:hover  { color: #fff; opacity: 1; }
+  .tab-btn.active { color: var(--accent); opacity: 1; }
+  [data-theme^="light"] .tab-btn:hover  { color: #000; }
   /* ── OPTIONS BUTTON ── */
   .options-btn {
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    color: var(--muted); line-height: 1;
+    color: var(--accent); line-height: 1;
     font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
     padding: 0.2rem 0.4rem; border-radius: 0.25rem; transition: color 0.15s;
   }
-  .options-btn:hover { color: var(--accent2); }
+  .options-btn:hover { color: #fff; }
+  [data-theme^="light"] .options-btn:hover { color: #000; }
 
   /* ── OPTIONS FLYOUT ── */
   .options-wrap   { position: relative; display: flex; flex-direction: column; align-items: center; }
   .options-flyout {
     position: absolute; bottom: calc(100% + 0.6rem); left: 50%;
     transform: translateX(-50%) translateY(4px);
-    background: var(--bg); border: 1px solid var(--border);
+    background: var(--bg); border: 1px solid var(--accent);
     border-radius: 0.6rem; padding: 0.6rem 0.8rem;
     display: flex; flex-direction: column; gap: 0.45rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
@@ -105,15 +107,15 @@
 
   /* ── OPTIONS ROWS ── */
   .opt-row   { display: flex; align-items: center; gap: 0.4rem; }
-  .opt-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); width: 4.5rem; flex-shrink: 0; }
+  .opt-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; color: var(--accent); width: 4.5rem; flex-shrink: 0; }
   .opt-section {
     display: flex; flex-direction: column; gap: 0.35rem;
-    padding-top: 0.45rem; border-top: 1px solid var(--border);
+    padding-top: 0.45rem; border-top: 1px solid var(--muted);
   }
   .opt-section.no-border  { border-top: none; padding-top: 0; }
   .opt-section .opt-row   { padding-left: 0.4rem; min-height: 1.4rem; }
-  .opt-section-title      { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); opacity: 0.6; }
-  .opt-val-label          { font-size: 0.62rem; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; width: 2.2rem; flex-shrink: 0; text-align: right; }
+  .opt-section-title      { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+  .opt-val-label          { font-size: 0.62rem; color: var(--accent); font-variant-numeric: tabular-nums; font-weight: 500; width: 2.2rem; flex-shrink: 0; text-align: right; }
 
   /* ── SWATCHES ── */
   .swatch-row  { display: flex; gap: 0.35rem; }
@@ -128,46 +130,49 @@
 
   /* ── OPTION BUTTONS ── */
   .pal-btn {
-    background: var(--surface); border: 1px solid var(--border);
+    background: transparent; border: 1px solid var(--muted);
     color: var(--muted); border-radius: 0.3rem;
     font-size: 0.6rem; font-weight: 500; cursor: pointer;
     padding: 0.18rem 0.35rem; white-space: nowrap;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
-  .pal-btn:hover  { background: var(--surface-hover); color: var(--text); }
+  .pal-btn:hover  { border-color: var(--accent); color: var(--accent); }
   .pal-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   /* ── OPTION SLIDERS ── */
-  .opt-slider { -webkit-appearance: none; appearance: none; flex: 1; height: 3px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
-  .opt-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%; background: var(--accent2); cursor: pointer; box-shadow: 0 0 5px var(--accent); }
-  .opt-slider::-moz-range-thumb     { width: 11px; height: 11px; border-radius: 50%; background: var(--accent2); cursor: pointer; border: none; box-shadow: 0 0 5px var(--accent); }
+  .opt-slider { -webkit-appearance: none; appearance: none; flex: 1; height: 3px; border-radius: 2px; background: var(--accent); outline: none; cursor: pointer; }
+  .opt-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+  .opt-slider::-moz-range-thumb     { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); cursor: pointer; border: none; }
 
   /* ── CARDS ── */
   :root { --card-w: 10rem; --card-h: 3rem; }
 
   .group-title {
     font-size: 0.8rem; letter-spacing: 0.1em;
-    color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; padding-left: 0.15rem;
+    color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; padding-left: 0.15rem;
   }
   .card-item {
     display: flex; align-items: center; gap: 0.6rem;
     width: var(--card-w); height: var(--card-h); padding: 0.6rem 0.75rem;
-    background: var(--surface); border: 1px solid var(--border);
+    background: var(--card-bg); border: 1px solid var(--muted);
     border-radius: 0.5rem; text-decoration: none; color: var(--text);
     white-space: nowrap; overflow: hidden;
     transition: background 0.15s, border-color 0.15s;
   }
-  .card-item:hover { background: var(--surface-hover); border-color: var(--border-focus); }
-  .card-icon     { width: min(calc(var(--card-h) * 0.65), 1.75rem); height: min(calc(var(--card-h) * 0.65), 1.75rem); border-radius: 0.35rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+  .card-item:hover { background: var(--card-bghover); border-color: var(--accent); }
+  .card-icon     { width: min(calc(var(--card-h) * 0.65), 1.75rem); height: min(calc(var(--card-h) * 0.65), 1.75rem); border-radius: 0.35rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.2rem; }
   .card-name     { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  .card-divider  { width: 100%; height: 1px; background: var(--border); margin: 0.4rem 0; }
+  .card-divider  { width: 100%; border-top: 1px solid var(--muted); margin: 0.4rem 0; }
 
-  [data-icons="off"] .card-icon { display: none; width: 0; margin: 0; }
+  [data-icons="off"] .card-icon { display: none; }
+  [data-stealth="on"] .card-item           { background: transparent; border-color: transparent; }
+  [data-stealth="on"] .card-item:hover     { border-color: var(--accent); }
 
   /* ── VERTICAL LAYOUT ── */
-  .card-groups { display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 1.2rem; margin-bottom: 1.6rem; }
+  .card-groups { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 1rem; padding-top: 1.2rem; margin-bottom: 1.6rem; }
   .card-list   { display: flex; flex-direction: column; gap: 0.3rem; }
+  .card-group  { width: var(--card-w); }
 
   /* ── HORIZONTAL LAYOUT ── */
   [data-layout="horizontal"] .card-groups  { flex-direction: column; gap: 1.2rem; }
@@ -177,9 +182,11 @@
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  .bottombar  { animation: fadeUp .35s both; opacity: 0; transform: translateY(6px); }
-  .card-group { animation: fadeUp .35s both;        opacity: 0; transform: translateY(6px); }
+  .bottombar    { animation: fadeUp .35s both; opacity: 0; transform: translateY(6px); }
+  .card-group,
+  .card-divider { animation: fadeUp .35s both; opacity: 0; transform: translateY(6px); }
   [data-anim="off"] .card-group,
+  [data-anim="off"] .card-divider,
   [data-anim="off"] .bottombar { animation: none; opacity: 1; transform: none; }
 
   /* ── CONFIG ERROR ── */
@@ -191,16 +198,25 @@
   }
   .config-error a { color: #f87171; text-decoration: underline; }
 
-  .version-str { font-size: 0.52rem; color: var(--muted); text-align: center; margin-top: 0.15rem; letter-spacing: 0.04em; }
+  .version-str { font-size: 0.62rem; color: var(--accent); text-align: center; margin-top: 0.15rem; letter-spacing: 0.04em; }
 </style>
 
 <script>
   // Apply saved settings before first paint to prevent flash
   (function() {
     const h = document.documentElement;
-    ['theme','layout','grid','glow','links','icons','anim'].forEach(k => {
-      const v = localStorage.getItem('hp-' + k);
-      if (v) h.setAttribute('data-' + k, v);
+    [
+      ['ad-theme',     'data-theme'],
+      ['ad-view',      'data-layout'],
+      ['ad-grid',      'data-grid'],
+      ['ad-glow',      'data-glow'],
+      ['ad-links',     'data-links'],
+      ['ad-icons',     'data-icons'],
+      ['ad-animation', 'data-anim'],
+      ['ad-stealth',   'data-stealth'],
+    ].forEach(([key, attr]) => {
+      const v = localStorage.getItem(key);
+      if (v) h.setAttribute(attr, v);
     });
     h.classList.add('no-transition');
     requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
@@ -219,21 +235,21 @@
     <div class="tabbar" id="tabBar" style="display:none"></div>
     <div class="card-groups" id="cardGroups"></div>
 
-    <header class="bottombar">
+    <div class="bottombar">
       <div class="options-wrap">
         <button class="options-btn" id="optionsBtn">OPTIONS</button>
         <div class="version-str" id="versionStr"></div>
         <div class="options-flyout" id="optionsFlyout"></div>
       </div>
-    </header>
-  </div><!-- /content -->
+    </div>
+  </div>
 
-</div><!-- /wrapper -->
+</div>
 
 <script>
 
   // ── HELPERS ──
-  const VERSION = '2026.03.18a';
+  const VERSION = '2026.03.18b';
   const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
 
@@ -260,7 +276,7 @@
   }
 
   // ── TABS ──
-  let activeTab = Math.max(0, Math.min(parseInt(localStorage.getItem('hp-tab'), 10) || 0, TABS.length - 1));
+  let activeTab = Math.max(0, Math.min(parseInt(localStorage.getItem('ad-tab'), 10) || 0, TABS.length - 1));
 
   function renderCards(cards, container) {
     if (!cards?.length) return;
@@ -274,7 +290,8 @@
       const list = el('div', { className: 'card-list' });
       g.appendChild(el('div', { className: 'group-title', textContent: entry.group }));
       (entry.items || []).forEach(({ name, url, icon }) => {
-        const a       = el('a',   { href: url, className: 'card-item' });
+        const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
+        const a     = el('a', { href: url, className: 'card-item', target: isNew ? '_blank' : '_self', rel: isNew ? 'noopener noreferrer' : '' });
         const iconDiv = el('div', { className: 'card-icon' });
         if (icon) {
           const img = Object.assign(document.createElement('img'), { src: icon, alt: '', loading: 'lazy' });
@@ -304,7 +321,7 @@
 
   function switchTab(index) {
     activeTab = index;
-    localStorage.setItem('hp-tab', index);
+    localStorage.setItem('ad-tab', index);
     buildTabs();
     renderTab(index);
   }
@@ -312,36 +329,33 @@
   function renderTab(index) {
     cardGroupsEl.innerHTML = '';
     renderCards((TABS[index] || TABS[0]).cards, cardGroupsEl);
-    document.querySelectorAll('.card-group').forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
-    applyLinks();
+    cardGroupsEl.querySelectorAll('.card-group, .card-divider').forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
     applyLayout();
   }
 
   // ── LAYOUT ──
-  let CARD_W         = parseFloat(localStorage.getItem('hp-card-w') || '10');
-  const GAP_H        = 0.3;   // horizontal: gap between cards in a row
-  const GAP_V        = 1.0;   // vertical:   gap between group columns
-  const fmt          = v => parseFloat(v).toFixed(1);
-
-  function getRootFontSize() { return parseFloat(getComputedStyle(ROOT).fontSize); }
+  let CARD_W            = parseFloat(localStorage.getItem('ad-card-w') || '10');
+  const GAP_HMODE       = 0.3;   // gap used in horizontal mode (between cards in a row)
+  const GAP_VMODE       = 1.0;   // gap used in vertical mode (between group columns)
+  const ROOT_FONT       = 20;    // matches html { font-size: 20px } in CSS — never changes
+  const rem2px          = r => r * ROOT_FONT;
+  const fmt             = v => parseFloat(v).toFixed(1);
 
   function applyCardWidth(w) {
     CARD_W = w;
     ROOT.style.setProperty('--card-w', w + 'rem');
-    localStorage.setItem('hp-card-w', w);
+    localStorage.setItem('ad-card-w', w);
   }
 
   function applyCardHeight(h) {
     ROOT.style.setProperty('--card-h', h + 'rem');
-    localStorage.setItem('hp-card-h', h);
+    localStorage.setItem('ad-card-h', h);
   }
 
   function applyLayout() {
-    const colTarget = parseInt(localStorage.getItem('hp-cols') || '10', 10);
+    const colTarget = parseInt(localStorage.getItem('ad-columns') || '10', 10);
     const isH       = ROOT.getAttribute('data-layout') === 'horizontal';
-    const gap       = isH ? GAP_H : GAP_V;
-    const rootFont  = getRootFontSize();
-    const rem2px    = r => r * rootFont;
+    const gap       = isH ? GAP_HMODE : GAP_VMODE;
     const avail     = window.innerWidth - rem2px(3);
     const fits      = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
 
@@ -373,14 +387,6 @@
     }
   });
 
-  function applyLinks() {
-    const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
-    cardGroupsEl.querySelectorAll('.card-item').forEach(a => {
-      a.target = isNew ? '_blank' : '_self';
-      a.rel    = isNew ? 'noopener noreferrer' : '';
-    });
-  }
-
   // ── THEMES ──
   const THEMES = {
     dark: [
@@ -403,7 +409,7 @@
 
   function applyTheme(id) {
     ROOT.setAttribute('data-theme', id);
-    localStorage.setItem('hp-theme', id);
+    localStorage.setItem('ad-theme', id);
   }
 
   // ── OPTIONS PANEL ──
@@ -423,12 +429,12 @@
     return row;
   }
 
-  function sliderRow(label, opts, onInput, onChange, fmtLabel) {
+  function sliderRow(label, opts, onChange, fmtLabel) {
     const row    = el('div',   { className: 'opt-row' });
     const slider = el('input', { type: 'range', ...opts, className: 'opt-slider' });
     const fmtFn  = fmtLabel || fmt;
     const lbl    = el('span',  { className: 'opt-val-label', textContent: fmtFn(opts.value) });
-    slider.oninput  = () => { lbl.textContent = fmtFn(slider.value); if (onInput) onInput(slider.value); };
+    slider.oninput  = () => { lbl.textContent = fmtFn(slider.value); };
     slider.onchange = () => { lbl.textContent = fmtFn(slider.value); onChange(slider.value); };
     row.appendChild(el('span', { className: 'opt-label', textContent: label }));
     row.appendChild(slider);
@@ -444,15 +450,15 @@
 
   function buildOptions() {
     const theme = ROOT.getAttribute('data-theme') || 'dark-slate';
-    const cols  = parseInt(localStorage.getItem('hp-cols') || '10', 10);
-    const cardH = parseFloat(localStorage.getItem('hp-card-h') || '3');
+    const cols  = parseInt(localStorage.getItem('ad-columns') || '10', 10);
+    const cardH = parseFloat(localStorage.getItem('ad-card-h') || '3');
     optionsFlyEl.innerHTML = '';
 
     // THEME
     const themeSection = section('THEME', true);
     ['dark', 'light'].forEach(group => {
       const row = el('div', { className: 'opt-row' });
-      row.appendChild(el('span', { className: 'opt-label', textContent: group }));
+      row.appendChild(el('span', { className: 'opt-label', textContent: group.toUpperCase() }));
       const swatchRow = el('div', { className: 'swatch-row' });
       THEMES[group].forEach(t => {
         const s = el('button', { className: 'swatch' + (t.id === theme ? ' active' : ''), title: t.label });
@@ -465,27 +471,32 @@
     });
     optionsFlyEl.appendChild(themeSection);
 
+    // MISC
+    const misc = section('MISC');
+    misc.appendChild(optRow('LINKS', [['new tab','new'],['same tab','same']], ROOT.getAttribute('data-links') || 'new', 'data-links', 'ad-links', () => renderTab(activeTab)));
+    optionsFlyEl.appendChild(misc);
+
     // DISPLAY
     const display = section('DISPLAY');
-    display.appendChild(optRow('icons', [['off','off'],['on','on']],                       ROOT.getAttribute('data-icons') || 'on',         'data-icons',  'hp-icons'));
-    display.appendChild(optRow('anim',  [['off','off'],['on','on']],                       ROOT.getAttribute('data-anim')  || 'on',         'data-anim',   'hp-anim'));
-    display.appendChild(optRow('grid',  [['off','off'],['on','on']],                       ROOT.getAttribute('data-grid')  || 'off',        'data-grid',   'hp-grid'));
-    display.appendChild(optRow('glow',  [['off','off'],['low','low'],['high','high']],     ROOT.getAttribute('data-glow')  || 'off',        'data-glow',   'hp-glow'));
+    display.appendChild(optRow('ANIMATION', [['off','off'],['on','on']],                   ROOT.getAttribute('data-anim')    || 'on',  'data-anim',    'ad-animation'));
+    display.appendChild(optRow('GLOW',      [['off','off'],['low','low'],['high','high']], ROOT.getAttribute('data-glow')    || 'off', 'data-glow',    'ad-glow'));
+    display.appendChild(optRow('GRID',      [['off','off'],['on','on']],                   ROOT.getAttribute('data-grid')    || 'off', 'data-grid',    'ad-grid'));
+    display.appendChild(optRow('ICONS',     [['off','off'],['on','on']],                   ROOT.getAttribute('data-icons')   || 'on',  'data-icons',   'ad-icons'));
+    display.appendChild(optRow('STEALTH',   [['off','off'],['on','on']],                   ROOT.getAttribute('data-stealth') || 'off', 'data-stealth', 'ad-stealth'));
     optionsFlyEl.appendChild(display);
 
-    // LAYOUT
-    const layout = section('LAYOUT');
-    layout.appendChild(optRow('mode',  [['horizontal','horizontal'],['vertical','vertical']], ROOT.getAttribute('data-layout') || 'horizontal', 'data-layout', 'hp-layout', applyLayout));
-    layout.appendChild(optRow('links', [['new tab','new'],['same tab','same']],               ROOT.getAttribute('data-links')  || 'new',        'data-links',  'hp-links',  applyLinks));
-    layout.appendChild(sliderRow('cols',   { min: 1,   max: 20,  value: cols,  step: 1   }, null, v => { localStorage.setItem('hp-cols', v); applyLayout(); }));
-    // Same integer trick as height — 0.5 step sliders can snap incorrectly due to
-    // floating point precision in some browsers. Multiply by 2 to use integer steps.
-    layout.appendChild(sliderRow('width',  { min: 10,  max: 40,  value: Math.round(CARD_W * 2), step: 1 }, null, v => { applyCardWidth(parseInt(v, 10) / 2); applyLayout(); }, v => fmt(parseInt(v, 10) / 2)));
+    // CARD LAYOUT
+    const layout = section('CARD LAYOUT');
+    layout.appendChild(optRow('VIEW',  [['horizontal','horizontal'],['vertical','vertical']], ROOT.getAttribute('data-layout') || 'horizontal', 'data-layout', 'ad-view', applyLayout));
+    layout.appendChild(sliderRow('COLUMNS', { min: 1,   max: 20,  value: cols,  step: 1   }, v => { localStorage.setItem('ad-columns', v); applyLayout(); }));
     // Height slider runs on integers internally (value * 2) to avoid browser float
     // snap point ambiguity with fractional min/step values (e.g. min:1.5, step:0.5
     // causes 3.0 to snap to 3.5 due to floating point rounding in some browsers).
     // The label formatter and onChange divide by 2 to restore the real rem value.
-    layout.appendChild(sliderRow('height', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, null, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
+    layout.appendChild(sliderRow('HEIGHT',  { min: 2,  max: 10,  value: Math.round(cardH * 2), step: 1 }, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
+    // Same integer trick as height — 0.5 step sliders can snap incorrectly due to
+    // floating point precision in some browsers. Multiply by 2 to use integer steps.
+    layout.appendChild(sliderRow('WIDTH',   { min: 10, max: 40,  value: Math.round(CARD_W * 2), step: 1 }, v => { applyCardWidth(parseInt(v, 10) / 2); applyLayout(); }, v => fmt(parseInt(v, 10) / 2)));
     optionsFlyEl.appendChild(layout);
   }
 
@@ -517,9 +528,9 @@
   // ── INIT ──
   // Attributes already restored in <head>; here we run DOM-dependent functions.
   (function () {
-    versionStrEl.textContent = 'Aerodash - v' + VERSION;
-    applyCardWidth(parseFloat(localStorage.getItem('hp-card-w') || '10'));
-    applyCardHeight(parseFloat(localStorage.getItem('hp-card-h') || '3'));
+    versionStrEl.textContent = 'Aerodash ' + VERSION;
+    applyCardWidth(parseFloat(localStorage.getItem('ad-card-w') || '10'));
+    applyCardHeight(parseFloat(localStorage.getItem('ad-card-h') || '3'));
     buildTabs();
     renderTab(activeTab);
   })();

@@ -1,3 +1,9 @@
+# 2026.03.18b
+* Completely overhauled theming system. Colors are more cohesive and balanced across all 12 themes.
+* Added Stealth Mode. Cards are invisible at rest, with only a border appearing on hover.
+* Fixed a bug in vertical layout where a group with many items could push subsequent groups onto a new row.
+* Various code cleanup and optimizations.
+
 # 2026.03.18a
 * Updated light theme color swatches to be more visible.
 * Changed icon behavior. Instead of diplaying a `?` if an icon fails to load, the card will be shown without the spacing for an icon. You can utilize this feature if you want only some cards to not have an icon. The readme explains how to accomplish this task.
