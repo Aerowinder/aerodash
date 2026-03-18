@@ -3,10 +3,10 @@ const CONFIG = {
   tabs: [
     {
       name: 'Home',
-      cards: [
+      groups: [
         {
-          group: 'Media',
-          items: [
+          name: 'Media',
+          cards: [
             { name: 'Jellyfin',           url: '#', icon: './icons/jellyfin.svg' },
             { name: 'Sonarr',             url: '#', icon: './icons/sonarr.svg' },
             { name: 'Radarr',             url: '#', icon: './icons/radarr.svg' },
@@ -23,8 +23,8 @@ const CONFIG = {
           ]
         },
         {
-          group: 'Infrastructure',
-          items: [
+          name: 'Infrastructure',
+          cards: [
             { name: 'Portainer',          url: '#', icon: './icons/portainer.svg' },
             { name: 'Nginx Proxy',        url: '#', icon: './icons/nginx-proxy-manager.svg' },
             { name: 'Pi-hole',            url: '#', icon: './icons/pi-hole.svg' },
@@ -42,8 +42,8 @@ const CONFIG = {
           ]
         },
         {
-          group: 'Downloads',
-          items: [
+          name: 'Downloads',
+          cards: [
             { name: 'qBittorrent',        url: '#', icon: './icons/qbittorrent.svg' },
             { name: 'SABnzbd',            url: '#', icon: './icons/sabnzbd.svg' },
             { name: 'Jackett',            url: '#', icon: './icons/jackett.svg' },
@@ -53,8 +53,8 @@ const CONFIG = {
           ]
         },
         {
-          group: 'Home',
-          items: [
+          name: 'Home',
+          cards: [
             { name: 'Home Assistant',     url: '#', icon: './icons/home-assistant.svg' },
             { name: 'Immich',             url: '#', icon: './icons/immich.svg' },
             { name: 'Vaultwarden',        url: '#', icon: './icons/vaultwarden.svg' },
@@ -70,10 +70,10 @@ const CONFIG = {
     },
     {
       name: 'Links',
-      cards: [
+      groups: [
         {
-          group: 'Dev Tools',
-          items: [
+          name: 'Dev Tools',
+          cards: [
             { name: 'GitHub',             url: 'https://github.com',              icon: './icons/github.svg' },
             { name: 'Stack Overflow',     url: 'https://stackoverflow.com',       icon: './icons/stack-overflow.svg' },
             { name: 'MDN Docs',           url: 'https://developer.mozilla.org',   icon: './icons/mdn-web-docs.svg' },
@@ -82,8 +82,8 @@ const CONFIG = {
           ]
         },
         {
-          group: 'News & Reading',
-          items: [
+          name: 'News & Reading',
+          cards: [
             { name: 'Hacker News',        url: 'https://news.ycombinator.com',    icon: './icons/hacker-news.svg' },
             { name: 'Lobsters',           url: 'https://lobste.rs',               icon: './icons/lobsters.svg' },
             { name: 'Ars Technica',       url: 'https://arstechnica.com',         icon: './icons/ars-technica.svg' },
@@ -91,8 +91,8 @@ const CONFIG = {
           ]
         },
         {
-          group: 'Reference',
-          items: [
+          name: 'Reference',
+          cards: [
             { name: 'Arch Wiki',          url: 'https://wiki.archlinux.org',      icon: './icons/arch-linux.svg' },
             { name: 'Docker Docs',        url: 'https://docs.docker.com',         icon: './icons/docker.svg' },
             { name: 'LinuxServer.io',     url: 'https://linuxserver.io',          icon: './icons/linuxserver-io.svg' },
@@ -102,8 +102,8 @@ const CONFIG = {
         },
         { divider: true },
         {
-          group: 'Utilities',
-          items: [
+          name: 'Utilities',
+          cards: [
             { name: 'Speedtest',          url: 'https://speedtest.net',           icon: './icons/speedtest.svg' },
             { name: 'Tailscale',          url: 'https://tailscale.com',           icon: './icons/tailscale.svg' },
             { name: 'My IP',              url: 'https://whatismyipaddress.com',   icon: './icons/whatismyipaddress.svg' },

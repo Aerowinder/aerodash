@@ -1,3 +1,8 @@
+# 2026.03.18c - BREAKING CHANGES
+* **BREAKING CHANGE**: `config.js` structure has changed. `cards` (the group container) is now `groups`, and `items` (individual links) is now `cards`. See the updated `config.example.js` and readme for the new structure.
+* Version and GitHub link moved into the OPTIONS flyout header.
+* Various code cleanup and optimizations.
+
 # 2026.03.18b
 * Completely overhauled theming system. Colors are more cohesive and balanced across all 12 themes.
 * Added Stealth Mode. Cards are invisible at rest, with only a border appearing on hover.

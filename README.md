@@ -65,9 +65,9 @@ Icons are not distributed with Aerodash. The best places to find them are:
 All your content lives here. The structure is:
 
 - **Tabs** are pages. If you only have one page, the tab bar is hidden automatically.
-- **Cards** are groups of links within a page, each with a title and a list of items.
-- **Items** are individual links — a name, URL, and optional icon.
-- **Dividers** are optional visual separators between card groups. Use `{ divider: true }` between any two groups.
+- **Groups** are collections of cards within a page, each with a name.
+- **Cards** are individual links that have a name, URL, and optional icon.
+- **Dividers** are optional visual separators between groups. Use `{ divider: true }` between any two groups.
 
 A fully populated `config.example.js` is included in the repo. Here's a minimal example showing all the concepts:
 
@@ -77,24 +77,24 @@ const CONFIG = {
   tabs: [
     {
       name: 'Home',
-      cards: [
+      groups: [
         {
-          group: 'Media',
-          items: [
+          name: 'Media',
+          cards: [
             { name: 'Jellyfin',   url: 'http://jellyfin.local',  icon: './icons/jellyfin.svg'  },
             { name: 'Sonarr',     url: 'http://sonarr.local',    icon: './icons/sonarr.svg'    },
           ]
         },
         {
-          group: 'Infrastructure',
-          items: [
+          name: 'Infrastructure',
+          cards: [
             { name: 'Portainer',  url: 'http://portainer.local', icon: './icons/portainer.svg' },
           ]
         },
         { divider: true },
         {
-          group: 'Links',
-          items: [
+          name: 'Links',
+          cards: [
             { name: 'GitHub',     url: 'https://github.com',     icon: './icons/github.svg'    },
             { name: 'Speedtest',  url: 'https://speedtest.net',  icon: './icons/speedtest.svg' },
           ]
@@ -103,10 +103,10 @@ const CONFIG = {
     },
     {
       name: 'Work',
-      cards: [
+      groups: [
         {
-          group: 'Tools',
-          items: [
+          name: 'Tools',
+          cards: [
             { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/gitea.svg'     },
           ]
         },
