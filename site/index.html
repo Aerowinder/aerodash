@@ -7,6 +7,7 @@
 <title>Aerodash</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  button { font-family: inherit; }
   .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
 
   html { font-size: 20px; }
@@ -70,19 +71,21 @@
   }
   .tab-btn {
     background: none; border: none; cursor: pointer;
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
     color: var(--muted); padding: 0.2rem 0.4rem; border-radius: 0.25rem;
     transition: color 0.15s;
   }
   .tab-btn:hover  { color: var(--accent2); }
   .tab-btn.active { color: var(--text); }
-  .ctrl-btn {
+  /* ── OPTIONS BUTTON ── */
+  .options-btn {
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    color: var(--muted); font-size: 0.82rem; line-height: 1;
-    padding: 0.1rem 0.15rem; border-radius: 0.25rem; transition: color 0.15s;
+    color: var(--muted); line-height: 1;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+    padding: 0.2rem 0.4rem; border-radius: 0.25rem; transition: color 0.15s;
   }
-  .ctrl-btn:hover { color: var(--accent2); }
+  .options-btn:hover { color: var(--accent2); }
 
   /* ── OPTIONS FLYOUT ── */
   .options-wrap   { position: relative; display: flex; flex-direction: column; align-items: center; }
@@ -143,7 +146,7 @@
   :root { --card-w: 10rem; --card-h: 3rem; }
 
   .group-title {
-    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-size: 0.8rem; letter-spacing: 0.1em;
     color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; padding-left: 0.15rem;
   }
   .card-item {
@@ -160,8 +163,7 @@
   .card-name     { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .card-divider  { width: 100%; height: 1px; background: var(--border); margin: 0.4rem 0; }
 
-  [data-icons="off"] .card-icon,
-  [data-icons="off"] .icon-qmark { display: none; width: 0; margin: 0; }
+  [data-icons="off"] .card-icon { display: none; width: 0; margin: 0; }
 
   /* ── VERTICAL LAYOUT ── */
   .card-groups { display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 1.2rem; margin-bottom: 1.6rem; }
@@ -175,21 +177,20 @@
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  .bottombar  { animation: fadeUp .35s 0.00s both; opacity: 0; transform: translateY(6px); }
+  .bottombar  { animation: fadeUp .35s both; opacity: 0; transform: translateY(6px); }
   .card-group { animation: fadeUp .35s both;        opacity: 0; transform: translateY(6px); }
   [data-anim="off"] .card-group,
   [data-anim="off"] .bottombar { animation: none; opacity: 1; transform: none; }
 
   /* ── CONFIG ERROR ── */
   .config-error {
+    display: none;
     margin: 0 auto 1rem; padding: 0.6rem 0.9rem; width: fit-content;
     background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4);
     border-radius: 0.5rem; color: #f87171; font-size: 0.72rem; font-weight: 500;
   }
   .config-error a { color: #f87171; text-decoration: underline; }
 
-  /* ── OPTIONS BUTTON ── */
-  .options-btn { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; padding: 0.2rem 0.4rem; }
   .version-str { font-size: 0.52rem; color: var(--muted); text-align: center; margin-top: 0.15rem; letter-spacing: 0.04em; }
 </style>
 
@@ -212,7 +213,7 @@
 <div class="glow"></div>
 <div class="wrapper">
 
-  <div id="configError" class="config-error" style="display:none"></div>
+  <div id="configError" class="config-error"></div>
 
   <div class="content" id="content">
     <div class="tabbar" id="tabBar" style="display:none"></div>
@@ -220,8 +221,8 @@
 
     <header class="bottombar">
       <div class="options-wrap">
-        <button class="ctrl-btn options-btn" id="optionsBtn" onclick="toggleOptions(event)">OPTIONS</button>
-        <div class="version-str">Aerodash - v2026.03.17c</div>
+        <button class="options-btn" id="optionsBtn">OPTIONS</button>
+        <div class="version-str" id="versionStr"></div>
         <div class="options-flyout" id="optionsFlyout"></div>
       </div>
     </header>
@@ -232,64 +233,72 @@
 <script>
 
   // ── HELPERS ──
+  const VERSION = '2026.03.18a';
+  const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
-  function qmark()        { return el('span', { className: 'icon-qmark', textContent: '?' }); }
+
+  // ── DOM REFS ──
+  const cardGroupsEl  = document.getElementById('cardGroups');
+  const contentEl     = document.getElementById('content');
+  const tabBarEl      = document.getElementById('tabBar');
+  const optionsBtnEl  = document.getElementById('optionsBtn');
+  const optionsFlyEl  = document.getElementById('optionsFlyout');
+  const configErrorEl = document.getElementById('configError');
+  const versionStrEl  = document.getElementById('versionStr');
 
   // ── CONFIG ──
   let TABS;
   try {
-    if (typeof CONFIG === 'undefined') throw new Error('config.js did not load — check the file exists and has no syntax errors.');
+    if (typeof CONFIG === 'undefined') throw new Error('config.js failed to load. Ensure the file exists and is free of syntax errors.');
     TABS = CONFIG.tabs;
     if (!TABS?.length) throw new Error('CONFIG.tabs is missing or empty.');
   } catch (e) {
     console.warn('Aerodash:', e.message);
     TABS = [{ name: 'Home', cards: [] }];
-    const err = document.getElementById('configError');
-    err.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.';
-    err.style.display = 'block';
+    configErrorEl.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.';
+    configErrorEl.style.display = 'block';
   }
 
   // ── TABS ──
-  let LINK_ELS     = [];
-  let CARD_LIST_ELS = [];
-  let activeTab   = Math.min(parseInt(localStorage.getItem('hp-tab') || '0'), TABS.length - 1);
+  let activeTab = Math.max(0, Math.min(parseInt(localStorage.getItem('hp-tab'), 10) || 0, TABS.length - 1));
 
   function renderCards(cards, container) {
     if (!cards?.length) return;
+    const frag = document.createDocumentFragment();
     cards.forEach(entry => {
       if (entry.divider) {
-        container.appendChild(el('div', { className: 'card-divider' }));
+        frag.appendChild(el('div', { className: 'card-divider' }));
         return;
       }
       const g    = el('div', { className: 'card-group' });
       const list = el('div', { className: 'card-list' });
       g.appendChild(el('div', { className: 'group-title', textContent: entry.group }));
-      entry.items.forEach(({ name, url, icon }) => {
+      (entry.items || []).forEach(({ name, url, icon }) => {
         const a       = el('a',   { href: url, className: 'card-item' });
         const iconDiv = el('div', { className: 'card-icon' });
         if (icon) {
           const img = Object.assign(document.createElement('img'), { src: icon, alt: '', loading: 'lazy' });
-          img.onerror = () => img.replaceWith(qmark());
+          img.onerror = () => iconDiv.remove();
           iconDiv.appendChild(img);
+          a.appendChild(iconDiv);
         }
-        a.appendChild(iconDiv);
         a.appendChild(el('span', { className: 'card-name', textContent: name }));
         list.appendChild(a);
       });
       g.appendChild(list);
-      container.appendChild(g);
+      frag.appendChild(g);
     });
+    container.appendChild(frag);
   }
 
   function buildTabs() {
-    const bar = document.getElementById('tabBar');
-    if (TABS.length <= 1) { bar.style.display = 'none'; return; }
-    bar.style.display = 'flex';
-    bar.innerHTML = '';
+    if (TABS.length <= 1) { tabBarEl.style.display = 'none'; return; }
+    tabBarEl.style.display = 'flex';
+    tabBarEl.innerHTML = '';
     TABS.forEach((tab, i) => {
       const b = el('button', { className: 'tab-btn' + (i === activeTab ? ' active' : ''), textContent: tab.name });
       b.onclick = () => switchTab(i);
-      bar.appendChild(b);
+      tabBarEl.appendChild(b);
     });
   }
 
@@ -301,12 +310,9 @@
   }
 
   function renderTab(index) {
-    const container = document.getElementById('cardGroups');
-    container.innerHTML = '';
-    renderCards((TABS[index] || TABS[0]).cards, container);
+    cardGroupsEl.innerHTML = '';
+    renderCards((TABS[index] || TABS[0]).cards, cardGroupsEl);
     document.querySelectorAll('.card-group').forEach((g, i) => { g.style.animationDelay = (0.04 + i * 0.04) + 's'; });
-    LINK_ELS      = Array.from(document.querySelectorAll('.card-item'));
-    CARD_LIST_ELS = Array.from(document.querySelectorAll('.card-list'));
     applyLinks();
     applyLayout();
   }
@@ -315,53 +321,61 @@
   let CARD_W         = parseFloat(localStorage.getItem('hp-card-w') || '10');
   const GAP_H        = 0.3;   // horizontal: gap between cards in a row
   const GAP_V        = 1.0;   // vertical:   gap between group columns
-  const ROOT_FONT    = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const rem2px       = r => r * ROOT_FONT;
   const fmt          = v => parseFloat(v).toFixed(1);
+
+  function getRootFontSize() { return parseFloat(getComputedStyle(ROOT).fontSize); }
 
   function applyCardWidth(w) {
     CARD_W = w;
-    document.documentElement.style.setProperty('--card-w', w + 'rem');
+    ROOT.style.setProperty('--card-w', w + 'rem');
     localStorage.setItem('hp-card-w', w);
   }
 
   function applyCardHeight(h) {
-    document.documentElement.style.setProperty('--card-h', h + 'rem');
+    ROOT.style.setProperty('--card-h', h + 'rem');
     localStorage.setItem('hp-card-h', h);
   }
 
   function applyLayout() {
-    const colTarget = parseInt(localStorage.getItem('hp-cols') || '10');
-    const isH       = document.documentElement.getAttribute('data-layout') === 'horizontal';
+    const colTarget = parseInt(localStorage.getItem('hp-cols') || '10', 10);
+    const isH       = ROOT.getAttribute('data-layout') === 'horizontal';
     const gap       = isH ? GAP_H : GAP_V;
-    const avail     = document.documentElement.clientWidth - rem2px(3);
+    const rootFont  = getRootFontSize();
+    const rem2px    = r => r * rootFont;
+    const avail     = window.innerWidth - rem2px(3);
     const fits      = Math.max(1, Math.floor((avail + rem2px(gap)) / (rem2px(CARD_W) + rem2px(gap))));
 
     let itemCap;
     if (isH) {
       // Horizontal: cap by the longest group (most items in a single row)
-      itemCap = CARD_LIST_ELS.length ? Math.max(...CARD_LIST_ELS.map(l => l.children.length)) : Infinity;
+      const lists = cardGroupsEl.querySelectorAll('.card-list');
+      itemCap = lists.length ? Math.max(...Array.from(lists, l => l.children.length)) : Infinity;
     } else {
       // Vertical: cap by the largest run of groups between dividers
       // e.g. 4 groups, divider, 4 groups → cap is 4, not 8
       let max = 0, run = 0;
-      document.getElementById('cardGroups').childNodes.forEach(c => {
-        if (c.classList?.contains('card-divider')) { max = Math.max(max, run); run = 0; }
-        else if (c.classList?.contains('card-group')) { run++; }
-      });
+      for (const c of cardGroupsEl.children) {
+        if (c.classList.contains('card-divider')) { max = Math.max(max, run); run = 0; }
+        else if (c.classList.contains('card-group')) { run++; }
+      }
       itemCap = Math.max(max, run) || colTarget;
     }
 
     const cols = Math.min(colTarget, fits, itemCap);
-    document.getElementById('content').style.width = (cols * rem2px(CARD_W) + (cols - 1) * rem2px(gap)) + 'px';
+    contentEl.style.width = (cols * rem2px(CARD_W) + (cols - 1) * rem2px(gap)) + 'px';
   }
 
-  let resizeTimer;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(applyLayout, 16); });
+  let resizePending = false;
+  window.addEventListener('resize', () => {
+    if (!resizePending) {
+      resizePending = true;
+      requestAnimationFrame(() => { applyLayout(); resizePending = false; });
+    }
+  });
 
   function applyLinks() {
-    const isNew = (document.documentElement.getAttribute('data-links') || 'new') === 'new';
-    LINK_ELS.forEach(a => {
+    const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
+    cardGroupsEl.querySelectorAll('.card-item').forEach(a => {
       a.target = isNew ? '_blank' : '_self';
       a.rel    = isNew ? 'noopener noreferrer' : '';
     });
@@ -378,37 +392,33 @@
       { id: 'dark-purple',  color: '#a855f7', label: 'Dark Purple'  },
     ],
     light: [
-      { id: 'light-slate',  color: '#f1f5f9', label: 'Light Slate' },
-      { id: 'light-blue',   color: '#ddeeff', label: 'Light Blue'    },
-      { id: 'light-orange', color: '#fff4e6', label: 'Light Orange' },
-      { id: 'light-teal',   color: '#daf5f0', label: 'Light Teal'   },
-      { id: 'light-rose',   color: '#fff0f4', label: 'Light Rose'   },
-      { id: 'light-purple', color: '#ede0ff', label: 'Light Purple' },
+      { id: 'light-slate',  color: '#94a3b8', label: 'Light Slate' },
+      { id: 'light-blue',   color: '#2563eb', label: 'Light Blue'    },
+      { id: 'light-orange', color: '#f97316', label: 'Light Orange' },
+      { id: 'light-teal',   color: '#14b8a6', label: 'Light Teal'   },
+      { id: 'light-rose',   color: '#f43f5e', label: 'Light Rose'   },
+      { id: 'light-purple', color: '#a855f7', label: 'Light Purple' },
     ]
   };
 
   function applyTheme(id) {
-    document.documentElement.setAttribute('data-theme', id);
+    ROOT.setAttribute('data-theme', id);
     localStorage.setItem('hp-theme', id);
   }
 
   // ── OPTIONS PANEL ──
-  function btn(text, active, onclick) {
-    const b = el('button', { className: 'pal-btn' + (active ? ' active' : ''), textContent: text });
-    b.onclick = onclick;
-    return b;
-  }
-
   function optRow(label, values, active, attr, key, extra) {
     const row = el('div', { className: 'opt-row' });
     row.appendChild(el('span', { className: 'opt-label', textContent: label }));
     values.forEach(([display, value]) => {
-      row.appendChild(btn(display, active === value, () => {
-        document.documentElement.setAttribute(attr, value);
+      const b = el('button', { className: 'pal-btn' + (active === value ? ' active' : ''), textContent: display });
+      b.onclick = () => {
+        ROOT.setAttribute(attr, value);
         localStorage.setItem(key, value);
         if (extra) extra();
         buildOptions();
-      }));
+      };
+      row.appendChild(b);
     });
     return row;
   }
@@ -433,13 +443,10 @@
   }
 
   function buildOptions() {
-    const flyout = document.getElementById('optionsFlyout');
-    const h      = document.documentElement;
-    const theme  = h.getAttribute('data-theme')  || 'dark-slate';
-    const cols   = parseInt(localStorage.getItem('hp-cols')   || '10');
-    const cardW  = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w')) || 10;
-    const cardH  = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-h')) || 3;
-    flyout.innerHTML = '';
+    const theme = ROOT.getAttribute('data-theme') || 'dark-slate';
+    const cols  = parseInt(localStorage.getItem('hp-cols') || '10', 10);
+    const cardH = parseFloat(localStorage.getItem('hp-card-h') || '3');
+    optionsFlyEl.innerHTML = '';
 
     // THEME
     const themeSection = section('THEME', true);
@@ -456,49 +463,61 @@
       row.appendChild(swatchRow);
       themeSection.appendChild(row);
     });
-    flyout.appendChild(themeSection);
+    optionsFlyEl.appendChild(themeSection);
 
     // DISPLAY
     const display = section('DISPLAY');
-    display.appendChild(optRow('icons', [['off','off'],['on','on']],                       h.getAttribute('data-icons') || 'on',         'data-icons',  'hp-icons'));
-    display.appendChild(optRow('anim',  [['off','off'],['on','on']],                       h.getAttribute('data-anim')  || 'on',         'data-anim',   'hp-anim'));
-    display.appendChild(optRow('grid',  [['off','off'],['on','on']],                       h.getAttribute('data-grid')  || 'off',        'data-grid',   'hp-grid'));
-    display.appendChild(optRow('glow',  [['off','off'],['low','low'],['high','high']],     h.getAttribute('data-glow')  || 'off',        'data-glow',   'hp-glow'));
-    flyout.appendChild(display);
+    display.appendChild(optRow('icons', [['off','off'],['on','on']],                       ROOT.getAttribute('data-icons') || 'on',         'data-icons',  'hp-icons'));
+    display.appendChild(optRow('anim',  [['off','off'],['on','on']],                       ROOT.getAttribute('data-anim')  || 'on',         'data-anim',   'hp-anim'));
+    display.appendChild(optRow('grid',  [['off','off'],['on','on']],                       ROOT.getAttribute('data-grid')  || 'off',        'data-grid',   'hp-grid'));
+    display.appendChild(optRow('glow',  [['off','off'],['low','low'],['high','high']],     ROOT.getAttribute('data-glow')  || 'off',        'data-glow',   'hp-glow'));
+    optionsFlyEl.appendChild(display);
 
     // LAYOUT
     const layout = section('LAYOUT');
-    layout.appendChild(optRow('mode',  [['horizontal','horizontal'],['vertical','vertical']], h.getAttribute('data-layout') || 'horizontal', 'data-layout', 'hp-layout', applyLayout));
-    layout.appendChild(optRow('links', [['new tab','new'],['same tab','same']],               h.getAttribute('data-links')  || 'new',        'data-links',  'hp-links',  applyLinks));
+    layout.appendChild(optRow('mode',  [['horizontal','horizontal'],['vertical','vertical']], ROOT.getAttribute('data-layout') || 'horizontal', 'data-layout', 'hp-layout', applyLayout));
+    layout.appendChild(optRow('links', [['new tab','new'],['same tab','same']],               ROOT.getAttribute('data-links')  || 'new',        'data-links',  'hp-links',  applyLinks));
     layout.appendChild(sliderRow('cols',   { min: 1,   max: 20,  value: cols,  step: 1   }, null, v => { localStorage.setItem('hp-cols', v); applyLayout(); }));
     // Same integer trick as height — 0.5 step sliders can snap incorrectly due to
     // floating point precision in some browsers. Multiply by 2 to use integer steps.
-    layout.appendChild(sliderRow('width',  { min: 10,  max: 40,  value: Math.round(cardW * 2), step: 1 }, null, v => { applyCardWidth(parseInt(v) / 2); applyLayout(); }, v => fmt(parseInt(v) / 2)));
+    layout.appendChild(sliderRow('width',  { min: 10,  max: 40,  value: Math.round(CARD_W * 2), step: 1 }, null, v => { applyCardWidth(parseInt(v, 10) / 2); applyLayout(); }, v => fmt(parseInt(v, 10) / 2)));
     // Height slider runs on integers internally (value * 2) to avoid browser float
     // snap point ambiguity with fractional min/step values (e.g. min:1.5, step:0.5
     // causes 3.0 to snap to 3.5 due to floating point rounding in some browsers).
     // The label formatter and onChange divide by 2 to restore the real rem value.
-    layout.appendChild(sliderRow('height', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, null, v => { applyCardHeight(parseInt(v) / 2); }, v => fmt(parseInt(v) / 2)));
-    flyout.appendChild(layout);
+    layout.appendChild(sliderRow('height', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, null, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
+    optionsFlyEl.appendChild(layout);
   }
 
   function toggleOptions(e) {
     e.stopPropagation();
+    if (optionsFlyEl.classList.contains('open')) {
+      optionsFlyEl.classList.remove('open');
+      return;
+    }
     buildOptions();
-    const flyout  = document.getElementById('optionsFlyout');
-    const btnRect = document.getElementById('optionsBtn').getBoundingClientRect();
-    flyout.classList.toggle('flipped', btnRect.top < flyout.scrollHeight + 20);
-    flyout.classList.toggle('open');
+    // Clear stale positioning, then measure true scrollHeight
+    optionsFlyEl.classList.remove('flipped');
+    optionsFlyEl.style.visibility = 'hidden';
+    optionsFlyEl.classList.add('open');
+    requestAnimationFrame(() => {
+      const btnRect = optionsBtnEl.getBoundingClientRect();
+      optionsFlyEl.classList.toggle('flipped', btnRect.top < optionsFlyEl.scrollHeight + 20);
+      optionsFlyEl.style.visibility = '';
+    });
   }
+
+  optionsBtnEl.addEventListener('click', toggleOptions);
 
   document.addEventListener('click', e => {
     if (!e.target.closest('.options-wrap'))
-      document.getElementById('optionsFlyout').classList.remove('open');
+      optionsFlyEl.classList.remove('open');
   });
 
   // ── INIT ──
   // Attributes already restored in <head>; here we run DOM-dependent functions.
   (function () {
+    versionStrEl.textContent = 'Aerodash - v' + VERSION;
     applyCardWidth(parseFloat(localStorage.getItem('hp-card-w') || '10'));
     applyCardHeight(parseFloat(localStorage.getItem('hp-card-h') || '3'));
     buildTabs();

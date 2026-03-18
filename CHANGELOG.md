@@ -1,9 +1,16 @@
+# 2026.03.18a
+* Updated light theme color swatches to be more visible.
+* Changed icon behavior. Instead of diplaying a `?` if an icon fails to load, the card will be shown without the spacing for an icon. You can utilize this feature if you want only some cards to not have an icon. The readme explains how to accomplish this task.
+* Unified font size across main page.
+* Fixed card group titles being forced uppercase. Will now accept whatever case you specify in `config.js`.
+* Continued optimization passes.
+
 # 2026.03.17c - BREAKING CHANGES
 * **BREAKING CHANGE**: config.js has had elements renamed. `pages` is now `tabs`, `services` is now `cards`, and `bookmarks` have been merged into `cards`.
 * Replaced Services with Cards.
 * Bookmarks have been removed entirely, now merged with Cards.
 * Options panel reorganized into labeled sections (THEME / DISPLAY / LAYOUT)
-* Added slider option to adjust Card height.
+* Added slider option to adjust Card height, icon size will scale with the card size.
 * Expanded existing count and width sliders to accomodate more setups.
 * Added divider support as a visual aid to separate cards. To use, specify `{ divider: true },` between card groups in the `cards:` array in `config.js`
 * Tweaked glow setting, making it more pronounced.

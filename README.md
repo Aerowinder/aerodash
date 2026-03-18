@@ -14,7 +14,8 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 - **Responsive**: column count automatically adjusts to fit your screen width
 - **12 themes**: 6 dark, 6 light, paired by color family
 - **Local icon support**: download links provided below, or use external URLs like favicons
-- **Icons optional**: disable icons entirely for a cleaner text-only look
+- **Per-item icon control**: omit the icon field on any item to display it without an icon slot
+- **Global icon optional**: disable icons entirely for a cleaner text-only look across the entire page
 - **Persistent settings**: layout, theme, and display preferences saved across sessions
 - **Separate config**: your cards live in `config.js`, never touched by updates
 
@@ -61,7 +62,7 @@ The `OPTIONS` button is at the bottom center of the page. Click it to reveal all
 
 ## Icons
 
-Icons can be local files (`./icons/name.svg`) or any external URL. If an icon fails to load or isn't provided, a `?` is shown as a fallback.
+Icons can be local files (`./icons/name.svg`) or any external URL. If an icon fails to load or isn't provided, no icon slot is shown.
 
 Icons are not distributed with Aerodash. The best places to find them are:
 
@@ -105,12 +106,12 @@ const CONFIG = {
             { name: 'Portainer',  url: 'http://portainer.local', icon: './icons/portainer.svg' },
           ]
         },
-        { divider: true },
+        { divider: true }, /* Create a thin divider for visual separation of cards. */
         {
           group: 'Links',
           items: [
             { name: 'GitHub',     url: 'https://github.com',     icon: './icons/github.svg'    },
-            { name: 'Speedtest',  url: 'https://speedtest.net',  icon: './icons/speedtest.svg' },
+            { name: 'Speedtest',  url: 'https://speedtest.net', }, /* icon: property removed. Card will appear with no icon. */
           ]
         },
       ]
@@ -121,7 +122,7 @@ const CONFIG = {
         {
           group: 'Tools',
           items: [
-            { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/gitea.svg'     },
+            { name: 'Gitea',      url: 'http://gitea.local',     icon: './icons/invalid-path.svg'     }, /* This icon path does not exist. Card will appear with no icon. */
           ]
         },
       ]
@@ -135,8 +136,10 @@ const CONFIG = {
 
 ## Updating
 
-Since `/site/config.js` and `/site/icons/` are gitignored, pulling updates will never overwrite your data:
+Updating is simple, and updates will never overwrite your configuration:
 
 ```bash
 git pull
 ```
+
+After the pull, just refresh the browser window. You don't need to do anything else.
