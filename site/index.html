@@ -155,9 +155,9 @@
     transition: background 0.15s, border-color 0.15s;
   }
   .card-item:hover { background: var(--surface-hover); border-color: var(--border-focus); }
-  .card-icon     { width: 1.75rem; height: 1.75rem; border-radius: 0.35rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+  .card-icon     { width: min(calc(var(--card-h) * 0.65), 1.75rem); height: min(calc(var(--card-h) * 0.65), 1.75rem); border-radius: 0.35rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
   .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.2rem; }
-  .card-name     { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; }
+  .card-name     { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .card-divider  { width: 100%; height: 1px; background: var(--border); margin: 0.4rem 0; }
 
   [data-icons="off"] .card-icon,
@@ -413,12 +413,13 @@
     return row;
   }
 
-  function sliderRow(label, opts, onInput, onChange) {
+  function sliderRow(label, opts, onInput, onChange, fmtLabel) {
     const row    = el('div',   { className: 'opt-row' });
     const slider = el('input', { type: 'range', ...opts, className: 'opt-slider' });
-    const lbl    = el('span',  { className: 'opt-val-label', textContent: fmt(opts.value) });
-    slider.oninput  = () => { lbl.textContent = fmt(slider.value); if (onInput) onInput(slider.value); };
-    slider.onchange = () => { lbl.textContent = fmt(slider.value); onChange(slider.value); };
+    const fmtFn  = fmtLabel || fmt;
+    const lbl    = el('span',  { className: 'opt-val-label', textContent: fmtFn(opts.value) });
+    slider.oninput  = () => { lbl.textContent = fmtFn(slider.value); if (onInput) onInput(slider.value); };
+    slider.onchange = () => { lbl.textContent = fmtFn(slider.value); onChange(slider.value); };
     row.appendChild(el('span', { className: 'opt-label', textContent: label }));
     row.appendChild(slider);
     row.appendChild(lbl);
@@ -436,8 +437,8 @@
     const h      = document.documentElement;
     const theme  = h.getAttribute('data-theme')  || 'dark-slate';
     const cols   = parseInt(localStorage.getItem('hp-cols')   || '10');
-    const cardW  = parseFloat(localStorage.getItem('hp-card-w') || '10');
-    const cardH  = parseFloat(localStorage.getItem('hp-card-h') || '3');
+    const cardW  = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w')) || 10;
+    const cardH  = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-h')) || 3;
     flyout.innerHTML = '';
 
     // THEME
@@ -469,9 +470,15 @@
     const layout = section('LAYOUT');
     layout.appendChild(optRow('mode',  [['horizontal','horizontal'],['vertical','vertical']], h.getAttribute('data-layout') || 'horizontal', 'data-layout', 'hp-layout', applyLayout));
     layout.appendChild(optRow('links', [['new tab','new'],['same tab','same']],               h.getAttribute('data-links')  || 'new',        'data-links',  'hp-links',  applyLinks));
-    layout.appendChild(sliderRow('cols',   { min: 1,   max: 20,  value: cols,  step: 1   }, null,            v => { localStorage.setItem('hp-cols', v); applyLayout(); }));
-    layout.appendChild(sliderRow('width',  { min: 5,   max: 20,  value: cardW, step: 0.5 }, null,            v => { applyCardWidth(parseFloat(v)); applyLayout(); }));
-    layout.appendChild(sliderRow('height', { min: 1.5, max: 5.0, value: cardH, step: 0.5 }, null,            v => { applyCardHeight(parseFloat(v)); }));
+    layout.appendChild(sliderRow('cols',   { min: 1,   max: 20,  value: cols,  step: 1   }, null, v => { localStorage.setItem('hp-cols', v); applyLayout(); }));
+    // Same integer trick as height — 0.5 step sliders can snap incorrectly due to
+    // floating point precision in some browsers. Multiply by 2 to use integer steps.
+    layout.appendChild(sliderRow('width',  { min: 10,  max: 40,  value: Math.round(cardW * 2), step: 1 }, null, v => { applyCardWidth(parseInt(v) / 2); applyLayout(); }, v => fmt(parseInt(v) / 2)));
+    // Height slider runs on integers internally (value * 2) to avoid browser float
+    // snap point ambiguity with fractional min/step values (e.g. min:1.5, step:0.5
+    // causes 3.0 to snap to 3.5 due to floating point rounding in some browsers).
+    // The label formatter and onChange divide by 2 to restore the real rem value.
+    layout.appendChild(sliderRow('height', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, null, v => { applyCardHeight(parseInt(v) / 2); }, v => fmt(parseInt(v) / 2)));
     flyout.appendChild(layout);
   }
 
