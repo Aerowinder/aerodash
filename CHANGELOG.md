@@ -1,3 +1,8 @@
+# 2026.03.18d
+* Theming overhauled (again) to make it easier to make changes to them in future. Change the base color and everything follows suit
+* Theme renames: Slate to Gray, Teal to Green, Rose to Red. Colors adjusted for these themes.
+* Added a medium glow level simnilar to the old high. Increased high glow significantly.
+
 # 2026.03.18c - BREAKING CHANGES
 * **BREAKING CHANGE**: `config.js` structure has changed. `cards` (the group container) is now `groups`, and `items` (individual links) is now `cards`. See the updated `config.example.js` and readme for the new structure.
 * Version and GitHub link moved into the OPTIONS flyout header.
