@@ -1,3 +1,7 @@
+# 2026.03.19a
+* Renamed all themes to more evocative names: Midnight, Navy, Ember, Forest, Crimson, Amethyst, Fog, Sky, Sand, Sage, Blush, Lavender.
+* Tuned all theme colors and updated swatches to better represent each theme.
+
 # 2026.03.18d
 * Theming overhauled (again) to make it easier to make changes to them in future. Change the base color and everything follows suit
 * Theme renames: Slate to Gray, Teal to Green, Rose to Red. Colors adjusted for these themes.
