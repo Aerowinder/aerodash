@@ -55,16 +55,16 @@
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image: linear-gradient(color-mix(in srgb, var(--muted) 10%, transparent) 1px, transparent 1px),
                       linear-gradient(90deg, color-mix(in srgb, var(--muted) 10%, transparent) 1px, transparent 1px);
-    background-size: 2.5rem 2.5rem; transition: opacity 0.25s;
+    background-size: 2.5rem 2.5rem; transition: opacity 0.25s; opacity: 0;
   }
-  [data-grid="off"] body::before { opacity: 0; }
+  [data-grid="on"] body::before { opacity: 1; }
 
   /* ── GLOW ── */
   .glow {
     position: fixed; top: -12rem; left: 50%; transform: translateX(-50%);
     width: 37.5rem; height: 37.5rem; border-radius: 50%;
     background: radial-gradient(circle, color-mix(in srgb, var(--base) 8%, transparent) 0%, transparent 70%);
-    pointer-events: none; z-index: 0; transition: opacity 0.25s;
+    pointer-events: none; z-index: 0; transition: opacity 0.25s, transform 0.25s;
     will-change: transform, opacity;
   }
   [data-glow="off"]  .glow { opacity: 0; }
@@ -73,25 +73,25 @@
   [data-glow="high"] .glow { opacity: 1;   transform: translateX(-50%) scale(2.5); background: radial-gradient(circle, color-mix(in srgb, var(--base) 18%, transparent) 0%, transparent 70%); }
 
   /* ── LAYOUT ── */
-  .wrapper  { position: relative; z-index: 1; padding: 2rem 1.5rem 3rem; }
+  .wrapper  { position: relative; z-index: 1; padding: 1rem 1.5rem; }
   .content  { margin: 0 auto; }
 
   /* ── BOTTOMBAR ── */
   .bottombar {
     display: flex; align-items: center; justify-content: center; gap: 0.6rem;
     padding: 0.7rem 1.5rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   /* ── TABBAR ── */
   .tabbar {
-    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.6rem;
     padding: 0.7rem 0;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1rem;
   }
   .tab-btn {
     background: none; border: none; cursor: pointer;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap;
     color: var(--muted); opacity: 0.7; padding: 0.2rem 0.4rem; border-radius: 0.25rem;
     transition: color 0.15s, opacity 0.15s;
   }
@@ -202,13 +202,14 @@
    *   .card-list { gap: 0.3rem }  ↔  GAP_HMODE = 0.3
    *   .card-groups { gap: 1rem }  ↔  GAP_VMODE = 1.0
    * The layout engine reads the JS values to compute column widths.
+   * Note: horizontal group gap is visual-only and not used in layout math.
    */
-  .card-groups { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 1rem; padding-top: 1.2rem; margin-bottom: 1.6rem; }
+  .card-groups { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 1rem; padding-top: 1rem; margin-bottom: 1rem; }
   .card-list   { display: flex; flex-direction: column; gap: 0.3rem; }
   .card-group  { width: var(--card-w); }
 
   /* ── HORIZONTAL LAYOUT ── */
-  [data-layout="horizontal"] .card-groups  { flex-direction: column; gap: 1.2rem; }
+  [data-layout="horizontal"] .card-groups  { flex-direction: column; }
   [data-layout="horizontal"] .card-group   { width: 100% !important; }
   [data-layout="horizontal"] .card-list    { flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
   [data-layout="horizontal"] .group-title  { margin-bottom: 0.5rem; }
@@ -276,7 +277,7 @@
 
     <div class="bottombar">
       <div class="options-wrap">
-        <button class="options-btn" id="optionsBtn" aria-label="Options">OPTIONS</button>
+        <button class="options-btn" id="optionsBtn" aria-label="Options" aria-expanded="false">OPTIONS</button>
         <div class="options-flyout" id="optionsFlyout"></div>
       </div>
     </div>
@@ -287,7 +288,7 @@
 <script>
 
   // ── HELPERS ──
-  const VERSION = '2026.03.19b';
+  const VERSION = '2026.03.20a';
   const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
 
@@ -333,7 +334,7 @@
         if (icon) {
           const iconDiv = el('div', { className: 'card-icon' });
           const img = el('img', { src: icon, alt: '', loading: 'lazy' });
-          img.onerror = () => iconDiv.remove();
+          img.onerror = function() { this.onerror = null; iconDiv.remove(); };
           iconDiv.appendChild(img);
           a.appendChild(iconDiv);
         }
@@ -510,6 +511,7 @@
       const swatchRow = el('div', { className: 'swatch-row' });
       THEMES[group].forEach(t => {
         const s = el('button', { className: 'swatch' + (t.id === theme ? ' active' : ''), title: t.label });
+        s.setAttribute('aria-label', t.label);
         s.style.background = t.color;
         s.onclick = () => { applyTheme(t.id); buildOptions(); };
         swatchRow.appendChild(s);
@@ -545,16 +547,22 @@
     optionsFlyEl.appendChild(layout);
   }
 
+  function closeOptions() {
+    optionsFlyEl.classList.remove('open');
+    optionsBtnEl.setAttribute('aria-expanded', 'false');
+  }
+
   function toggleOptions(e) {
     e.stopPropagation();
     if (optionsFlyEl.classList.contains('open')) {
-      optionsFlyEl.classList.remove('open');
+      closeOptions();
       return;
     }
     buildOptions();
     optionsFlyEl.classList.remove('flipped');
     optionsFlyEl.style.visibility = 'hidden';
     optionsFlyEl.classList.add('open');
+    optionsBtnEl.setAttribute('aria-expanded', 'true');
     requestAnimationFrame(() => {
       const btnRect = optionsBtnEl.getBoundingClientRect();
       optionsFlyEl.classList.toggle('flipped', btnRect.top < optionsFlyEl.scrollHeight + 20);
@@ -566,7 +574,12 @@
 
   document.addEventListener('click', e => {
     if (!e.target.closest('.options-wrap'))
-      optionsFlyEl.classList.remove('open');
+      closeOptions();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && optionsFlyEl.classList.contains('open'))
+      closeOptions();
   });
 
   // ── INIT ──

@@ -1,3 +1,7 @@
+# 2026.03.20a
+* Changed wrapping behavior of tabs. They now wrap like card groups (mobile use improvement).
+* Adjusted vertical space of most items throughout the project. UI is now slightly more compact.
+
 # 2026.03.19b
 * Optimization pass.
 
