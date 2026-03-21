@@ -1,3 +1,8 @@
+# 2026.03.20c
+* Gear icon now stays pinned to the top right regardless of tab count or card width, preventing it from being pushed around by wrapping tabs.
+* Options flyout now scrolls horizontally if clipped on narrow screens.
+* Selected option button text is now always white for better contrast.
+
 # 2026.03.20b
 * Replaced OPTIONS button with a gear icon, moved into the topbar alongside tabs.
 * Options flyout now opens downward from the gear, scrollable on short screens.
