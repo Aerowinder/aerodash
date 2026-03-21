@@ -8,6 +8,12 @@
 <title>Aerodash</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :focus-visible { outline: 2px solid var(--base); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-group, .card-divider { animation: none; opacity: 1; transform: none; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
   button { font-family: inherit; }
   .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
 
@@ -33,15 +39,17 @@
     --card-bg:     rgba(255,255,255,0.10);
     --card-bghover:rgba(255,255,255,0.15);
     --card-text:   color-mix(in srgb, var(--base) 30%, white);
-    --muted:       color-mix(in srgb, var(--base) 60%, transparent);
+    --muted:       rgb(from var(--base) r g b / 0.5);
     --site-bg:     color-mix(in srgb, var(--base) 20%, black);
+    --hover-text:  #fff;
   }
   [data-theme^="light"] {
     --card-bg:     rgba(0,0,0,0.08);
     --card-bghover:rgba(0,0,0,0.13);
     --card-text:   color-mix(in srgb, var(--base) 30%, black);
-    --muted:       color-mix(in srgb, var(--base) 60%, white);
+    --muted:       rgb(from var(--base) r g b / 0.5);
     --site-bg:     color-mix(in srgb, var(--base) 20%, white);
+    --hover-text:  #000;
   }
 
   /* ── BASE STYLES ── */
@@ -53,8 +61,8 @@
   }
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: linear-gradient(color-mix(in srgb, var(--muted) 10%, transparent) 1px, transparent 1px),
-                      linear-gradient(90deg, color-mix(in srgb, var(--muted) 10%, transparent) 1px, transparent 1px);
+    background-image: linear-gradient(rgb(from var(--base) r g b / 0.06) 1px, transparent 1px),
+                      linear-gradient(90deg, rgb(from var(--base) r g b / 0.06) 1px, transparent 1px);
     background-size: 2.5rem 2.5rem; transition: opacity 0.25s; opacity: 0;
   }
   [data-grid="on"] body::before { opacity: 1; }
@@ -63,68 +71,58 @@
   .glow {
     position: fixed; top: -12rem; left: 50%; transform: translateX(-50%);
     width: 37.5rem; height: 37.5rem; border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--base) 8%, transparent) 0%, transparent 70%);
+    background: radial-gradient(circle, rgb(from var(--base) r g b / 0.08) 0%, transparent 70%);
     pointer-events: none; z-index: 0; transition: opacity 0.25s, transform 0.25s;
-    will-change: transform, opacity;
   }
   [data-glow="off"]  .glow { opacity: 0; }
   [data-glow="low"]  .glow { opacity: 0.9; transform: translateX(-50%) scale(2.0); }
-  [data-glow="med"]  .glow { opacity: 1;   transform: translateX(-50%) scale(2.5); background: radial-gradient(circle, color-mix(in srgb, var(--base) 12%, transparent) 0%, transparent 70%); }
-  [data-glow="high"] .glow { opacity: 1;   transform: translateX(-50%) scale(2.5); background: radial-gradient(circle, color-mix(in srgb, var(--base) 18%, transparent) 0%, transparent 70%); }
+  [data-glow="med"]  .glow { opacity: 1;   transform: translateX(-50%) scale(2.5); background: radial-gradient(circle, rgb(from var(--base) r g b / 0.12) 0%, transparent 70%); }
+  [data-glow="high"] .glow { opacity: 1;   transform: translateX(-50%) scale(2.5); background: radial-gradient(circle, rgb(from var(--base) r g b / 0.18) 0%, transparent 70%); }
 
   /* ── LAYOUT ── */
   .wrapper  { position: relative; z-index: 1; padding: 1rem 1.5rem; }
   .content  { margin: 0 auto; }
 
-  /* ── BOTTOMBAR ── */
-  .bottombar {
-    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    padding: 0.7rem 1.5rem;
-    margin-top: 1rem;
-  }
 
-  /* ── TABBAR ── */
-  .tabbar {
-    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.6rem;
-    padding: 0.7rem 0;
-    margin-bottom: 1rem;
+  /* ── TOPBAR ── */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;
+    padding: 0;
   }
+  .topbar-spacer { width: 1.4rem; flex-shrink: 0; }
+  .topbar-tabs { display: flex; flex: 1; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.6rem; }
   .tab-btn {
     background: none; border: none; cursor: pointer;
     font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap;
     color: var(--muted); opacity: 0.7; padding: 0.2rem 0.4rem; border-radius: 0.25rem;
     transition: color 0.15s, opacity 0.15s;
   }
-  .tab-btn:hover  { color: #fff; opacity: 1; }
+  .tab-btn:hover  { color: var(--hover-text); opacity: 1; }
   .tab-btn.active { color: var(--base); opacity: 1; }
-  [data-theme^="light"] .tab-btn:hover  { color: #000; }
 
   /* ── OPTIONS BUTTON ── */
   .options-btn {
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     color: var(--base); line-height: 1;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
-    padding: 0.2rem 0.4rem; border-radius: 0.25rem; transition: color 0.15s;
+    padding: 0.2rem; border-radius: 0.25rem; transition: color 0.15s;
   }
-  .options-btn:hover { color: #fff; }
-  [data-theme^="light"] .options-btn:hover { color: #000; }
+  .options-btn:hover { color: var(--hover-text); }
 
   /* ── OPTIONS FLYOUT ── */
-  .options-wrap   { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .options-wrap   { position: relative; display: flex; flex-direction: column; align-items: flex-end; }
   .options-flyout {
-    position: absolute; bottom: calc(100% + 0.6rem); left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    position: absolute; top: calc(100% + 0.6rem); right: 0;
+    transform: translateY(-4px);
     background: var(--site-bg); border: 1px solid var(--base);
     border-radius: 0.6rem; padding: 0.6rem 0.8rem;
     display: flex; flex-direction: column; gap: 0.45rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    opacity: 0; pointer-events: none; z-index: 200; min-width: 16rem;
+    opacity: 0; pointer-events: none; z-index: 200; min-width: 16rem; max-width: calc(100vw - 2rem);
+    max-height: 80vh; overflow-y: auto; overscroll-behavior: contain;
     transition: opacity 0.15s, transform 0.15s;
   }
-  .options-flyout.open    { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-  .options-flyout.flipped { bottom: auto; top: calc(100% + 0.6rem); transform: translateX(-50%) translateY(-4px); }
-  .options-flyout.flipped.open { transform: translateX(-50%) translateY(0); }
+  .options-flyout.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
   /* ── OPTIONS ROWS ── */
   .opt-row   { display: flex; align-items: center; gap: 0.4rem; }
@@ -146,8 +144,7 @@
     transition: transform 0.12s, border-color 0.12s;
   }
   .swatch:hover                        { transform: scale(1.2); }
-  .swatch.active                       { border-color: #fff; }
-  [data-theme^="light"] .swatch.active { border-color: #000; }
+  .swatch.active { border-color: var(--hover-text); }
 
   /* ── OPTION BUTTONS ── */
   .pal-btn {
@@ -157,14 +154,13 @@
     padding: 0.18rem 0.35rem; white-space: nowrap;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
-  .pal-btn:hover                       { border-color: #fff; color: #fff; }
-  [data-theme^="light"] .pal-btn:hover { border-color: #000; color: #000; }
-  .pal-btn.active { background: var(--base); border-color: var(--base); color: #fff; }
+  .pal-btn:hover { border-color: var(--hover-text); color: var(--hover-text); }
+  .pal-btn.active { background: var(--base); border-color: var(--base); color: var(--site-bg); }
 
   /* ── OPTION SLIDERS ── */
-  .opt-slider { -webkit-appearance: none; appearance: none; flex: 1; height: 3px; border-radius: 2px; background: var(--base); outline: none; cursor: pointer; }
-  .opt-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%; background: var(--base); cursor: pointer; }
-  .opt-slider::-moz-range-thumb     { width: 11px; height: 11px; border-radius: 50%; background: var(--base); cursor: pointer; border: none; }
+  .opt-slider { -webkit-appearance: none; appearance: none; flex: 1; height: 5px; border-radius: 4px; background: var(--base); outline: none; cursor: pointer; touch-action: pan-y; }
+  .opt-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--base); cursor: pointer; }
+  .opt-slider::-moz-range-thumb     { width: 20px; height: 20px; border-radius: 50%; background: var(--base); cursor: pointer; border: none; }
 
   /* ── CARDS ── */
   :root { --card-w: 10rem; --card-h: 3rem; }
@@ -188,7 +184,7 @@
   }
   .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.2rem; }
   .card-name     { font-size: 0.8rem; font-weight: 400; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  .card-divider  { width: 100%; border-top: 1px solid var(--muted); margin: 0.4rem 0; }
+  .card-divider  { width: 100%; border-top: 1px solid var(--muted); margin: 0.9rem 0 0.4rem; }
 
   [data-icons="off"] .card-icon { display: none; }
 
@@ -199,27 +195,25 @@
   /*
    * ── LAYOUT MODES ──
    * SYNC WARNING: The gap values here MUST match the JS constants:
-   *   .card-list { gap: 0.3rem }  ↔  GAP_HMODE = 0.3
-   *   .card-groups { gap: 1rem }  ↔  GAP_VMODE = 1.0
+   *   .card-list { gap: 0.375rem }  ↔  GAP_HMODE = 0.375
+   *   .card-groups { gap: 1.5rem }  ↔  GAP_VMODE = 1.5
    * The layout engine reads the JS values to compute column widths.
    * Note: horizontal group gap is visual-only and not used in layout math.
    */
-  .card-groups { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 1rem; padding-top: 1rem; margin-bottom: 1rem; }
-  .card-list   { display: flex; flex-direction: column; gap: 0.3rem; }
+  .card-groups { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 1.5rem; padding-top: 1.5rem; margin-bottom: 1.5rem; }
+  .card-list   { display: flex; flex-direction: column; gap: 0.375rem; }
   .card-group  { width: var(--card-w); }
 
   /* ── HORIZONTAL LAYOUT ── */
   [data-layout="horizontal"] .card-groups  { flex-direction: column; }
   [data-layout="horizontal"] .card-group   { width: 100% !important; }
-  [data-layout="horizontal"] .card-list    { flex-direction: row; flex-wrap: wrap; gap: 0.3rem; }
+  [data-layout="horizontal"] .card-list    { flex-direction: row; flex-wrap: wrap; gap: 0.375rem; }
   [data-layout="horizontal"] .group-title  { margin-bottom: 0.5rem; }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  .bottombar,
   .card-group,
   .card-divider { animation: fadeUp .35s both; opacity: 0; transform: translateY(6px); }
-  [data-anim="off"] .bottombar,
   [data-anim="off"] .card-group,
   [data-anim="off"] .card-divider { animation: none; opacity: 1; transform: none; }
 
@@ -245,19 +239,21 @@
   // Apply saved settings before first paint to prevent flash
   (function() {
     const h = document.documentElement;
-    [
-      ['ad-theme',     'data-theme'],
-      ['ad-view',      'data-layout'],
-      ['ad-grid',      'data-grid'],
-      ['ad-glow',      'data-glow'],
-      ['ad-links',     'data-links'],
-      ['ad-icons',     'data-icons'],
-      ['ad-animation', 'data-anim'],
-      ['ad-stealth',   'data-stealth'],
-    ].forEach(([key, attr]) => {
-      const v = localStorage.getItem(key);
-      if (v) h.setAttribute(attr, v);
-    });
+    try {
+      [
+        ['ad-theme',     'data-theme'],
+        ['ad-view',      'data-layout'],
+        ['ad-grid',      'data-grid'],
+        ['ad-glow',      'data-glow'],
+        ['ad-links',     'data-links'],
+        ['ad-icons',     'data-icons'],
+        ['ad-animation', 'data-anim'],
+        ['ad-stealth',   'data-stealth'],
+      ].forEach(([key, attr]) => {
+        const v = localStorage.getItem(key);
+        if (v) h.setAttribute(attr, v);
+      });
+    } catch(e) {}
     h.classList.add('no-transition');
     requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
   })();
@@ -269,18 +265,21 @@
 <div class="glow"></div>
 <div class="wrapper">
 
-  <div id="configError" class="config-error"></div>
-
   <div class="content" id="content">
-    <div class="tabbar" id="tabBar" role="tablist" style="display:none"></div>
-    <div class="card-groups" id="cardGroups"></div>
-
-    <div class="bottombar">
+    <div class="topbar" id="topBar">
+      <div class="topbar-spacer"></div>
+      <div class="topbar-tabs" id="topBarTabs"></div>
       <div class="options-wrap">
-        <button class="options-btn" id="optionsBtn" aria-label="Options" aria-expanded="false">OPTIONS</button>
+        <button class="options-btn" id="optionsBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
         <div class="options-flyout" id="optionsFlyout"></div>
       </div>
     </div>
+    <div class="card-groups" id="cardGroups"></div>
+    <div id="configError" class="config-error"></div>
   </div>
 
 </div>
@@ -288,14 +287,18 @@
 <script>
 
   // ── HELPERS ──
-  const VERSION = '2026.03.20a';
+  const VERSION = '2026.03.20b';
   const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
+  const ls = (() => {
+    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return localStorage; }
+    catch { return { getItem: () => null, setItem: () => {}, removeItem: () => {} }; }
+  })();
 
   // ── DOM REFS ──
   const cardGroupsEl  = document.getElementById('cardGroups');
   const contentEl     = document.getElementById('content');
-  const tabBarEl      = document.getElementById('tabBar');
+  const topBarTabsEl  = document.getElementById('topBarTabs');
   const optionsBtnEl  = document.getElementById('optionsBtn');
   const optionsFlyEl  = document.getElementById('optionsFlyout');
   const configErrorEl = document.getElementById('configError');
@@ -314,7 +317,7 @@
   }
 
   // ── TABS ──
-  let activeTab = Math.max(0, Math.min(parseInt(localStorage.getItem('ad-tab'), 10) || 0, TABS.length - 1));
+  let activeTab = Math.max(0, Math.min(parseInt(ls.getItem('ad-tab'), 10) || 0, TABS.length - 1));
 
   function renderGroups(groups, container) {
     if (!groups?.length) return;
@@ -330,7 +333,10 @@
       g.appendChild(el('div', { className: 'group-title', textContent: entry.name }));
       g.appendChild(list);
       (entry.cards || []).forEach(({ name, url, icon }) => {
-        const a = el('a', { href: url, className: 'card-item', target: isNew ? '_blank' : '_self', rel: isNew ? 'noopener noreferrer' : '' });
+        if (!name) return; // skip nameless cards
+        const href = url || '#'; // missing url defaults to '#'
+        // icon is optional — missing or failed icons are already handled gracefully
+        const a = el('a', { href: href, className: 'card-item', target: isNew ? '_blank' : '_self', rel: isNew ? 'noopener noreferrer' : '' });
         if (icon) {
           const iconDiv = el('div', { className: 'card-icon' });
           const img = el('img', { src: icon, alt: '', loading: 'lazy' });
@@ -347,21 +353,19 @@
   }
 
   function buildTabs() {
-    if (TABS.length <= 1) { tabBarEl.style.display = 'none'; return; }
-    tabBarEl.style.display = 'flex';
-    tabBarEl.innerHTML = '';
+    topBarTabsEl.innerHTML = '';
+    if (TABS.length <= 1) return;
     TABS.forEach((tab, i) => {
       const isActive = i === activeTab;
-      const b = el('button', { className: 'tab-btn' + (isActive ? ' active' : ''), textContent: tab.name, role: 'tab' });
-      b.setAttribute('aria-selected', isActive);
+      const b = el('button', { className: 'tab-btn' + (isActive ? ' active' : ''), textContent: tab.name });
       b.onclick = () => switchTab(i);
-      tabBarEl.appendChild(b);
+      topBarTabsEl.appendChild(b);
     });
   }
 
   function switchTab(index) {
     activeTab = index;
-    localStorage.setItem('ad-tab', index);
+    ls.setItem('ad-tab', index);
     buildTabs();
     renderTab(index);
   }
@@ -377,16 +381,24 @@
 
   // ── LAYOUT ──
   //
-  // SYNC WARNING: ROOT_FONT must match the CSS `html { font-size }` value.
   // GAP_HMODE must match `.card-list { gap }` in horizontal mode.
   // GAP_VMODE must match `.card-groups { gap }` in vertical mode.
   // If any CSS value changes, update the corresponding JS constant.
   //
-  let CARD_W      = parseFloat(localStorage.getItem('ad-card-w') || '10');
-  let colTarget   = parseInt(localStorage.getItem('ad-columns') || '10', 10);
-  const GAP_HMODE = 0.3;
-  const GAP_VMODE = 1.0;
-  const ROOT_FONT = 20;
+  function loadFloat(key, fallback) {
+    const v = parseFloat(ls.getItem(key));
+    return Number.isFinite(v) ? v : fallback;
+  }
+  function loadInt(key, fallback) {
+    const v = parseInt(ls.getItem(key), 10);
+    return Number.isFinite(v) ? v : fallback;
+  }
+
+  let CARD_W      = loadFloat('ad-card-w', 10);
+  let colTarget   = loadInt('ad-columns', 10);
+  const GAP_HMODE = 0.375;
+  const GAP_VMODE = 1.5;
+  const ROOT_FONT = parseFloat(getComputedStyle(document.documentElement).fontSize);
   const fmt       = v => parseFloat(v).toFixed(1);
 
   // ── THEMES ──
@@ -412,18 +424,18 @@
   function applyCardWidth(w) {
     CARD_W = w;
     ROOT.style.setProperty('--card-w', w + 'rem');
-    localStorage.setItem('ad-card-w', w);
+    ls.setItem('ad-card-w', w);
   }
 
   function applyCardHeight(h) {
     ROOT.style.setProperty('--card-h', h + 'rem');
-    localStorage.setItem('ad-card-h', h);
+    ls.setItem('ad-card-h', h);
   }
 
   function applyLayout() {
     const isH       = ROOT.getAttribute('data-layout') === 'horizontal';
     const gap       = isH ? GAP_HMODE : GAP_VMODE;
-    const availRem  = window.innerWidth / ROOT_FONT - 3;
+    const availRem  = document.documentElement.clientWidth / ROOT_FONT - 3;
     const fits      = Math.max(1, Math.floor((availRem + gap) / (CARD_W + gap)));
 
     let itemCap;
@@ -440,7 +452,7 @@
     }
 
     const cols = Math.min(colTarget, fits, itemCap);
-    contentEl.style.width = (cols * CARD_W + (cols - 1) * gap) * ROOT_FONT + 'px';
+    contentEl.style.width = Math.round((cols * CARD_W + (cols - 1) * gap) * ROOT_FONT) + 'px';
   }
 
   let resizePending = false;
@@ -454,7 +466,7 @@
   // ── OPTIONS PANEL ──
   function applyTheme(id) {
     ROOT.setAttribute('data-theme', id);
-    localStorage.setItem('ad-theme', id);
+    ls.setItem('ad-theme', id);
   }
 
   function optRow(label, values, active, attr, key, extra) {
@@ -464,7 +476,7 @@
       const b = el('button', { className: 'pal-btn' + (active === value ? ' active' : ''), textContent: display });
       b.onclick = () => {
         ROOT.setAttribute(attr, value);
-        localStorage.setItem(key, value);
+        ls.setItem(key, value);
         if (extra) extra();
         buildOptions();
       };
@@ -494,7 +506,7 @@
 
   function buildOptions() {
     const theme = ROOT.getAttribute('data-theme') || 'dark-midnight';
-    const cardH = parseFloat(localStorage.getItem('ad-card-h') || '3');
+    const cardH = loadFloat('ad-card-h', 3);
     optionsFlyEl.innerHTML = '';
 
     // HEADER
@@ -511,7 +523,6 @@
       const swatchRow = el('div', { className: 'swatch-row' });
       THEMES[group].forEach(t => {
         const s = el('button', { className: 'swatch' + (t.id === theme ? ' active' : ''), title: t.label });
-        s.setAttribute('aria-label', t.label);
         s.style.background = t.color;
         s.onclick = () => { applyTheme(t.id); buildOptions(); };
         swatchRow.appendChild(s);
@@ -537,8 +548,8 @@
 
     // CARD LAYOUT
     const layout = section('CARD LAYOUT');
-    layout.appendChild(optRow('VIEW',  [['horizontal','horizontal'],['vertical','vertical']], ROOT.getAttribute('data-layout') || 'horizontal', 'data-layout', 'ad-view', applyLayout));
-    layout.appendChild(sliderRow('COLUMNS', { min: 1, max: 20, value: colTarget, step: 1 }, v => { colTarget = parseInt(v, 10); localStorage.setItem('ad-columns', colTarget); applyLayout(); }));
+    layout.appendChild(optRow('VIEW',    [['horizontal','horizontal'],['vertical','vertical']], ROOT.getAttribute('data-layout') || 'horizontal', 'data-layout', 'ad-view', applyLayout));
+    layout.appendChild(sliderRow('COLUMNS', { min: 1, max: 20, value: colTarget, step: 1 }, v => { colTarget = parseInt(v, 10); ls.setItem('ad-columns', colTarget); applyLayout(); }));
     // Height slider uses integer internals (value × 2) to avoid browser float
     // snap ambiguity with fractional min/step values.
     layout.appendChild(sliderRow('HEIGHT', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
@@ -549,7 +560,6 @@
 
   function closeOptions() {
     optionsFlyEl.classList.remove('open');
-    optionsBtnEl.setAttribute('aria-expanded', 'false');
   }
 
   function toggleOptions(e) {
@@ -559,15 +569,7 @@
       return;
     }
     buildOptions();
-    optionsFlyEl.classList.remove('flipped');
-    optionsFlyEl.style.visibility = 'hidden';
     optionsFlyEl.classList.add('open');
-    optionsBtnEl.setAttribute('aria-expanded', 'true');
-    requestAnimationFrame(() => {
-      const btnRect = optionsBtnEl.getBoundingClientRect();
-      optionsFlyEl.classList.toggle('flipped', btnRect.top < optionsFlyEl.scrollHeight + 20);
-      optionsFlyEl.style.visibility = '';
-    });
   }
 
   optionsBtnEl.addEventListener('click', toggleOptions);
@@ -583,8 +585,12 @@
   });
 
   // ── INIT ──
-  applyCardWidth(parseFloat(localStorage.getItem('ad-card-w') || '10'));
-  applyCardHeight(parseFloat(localStorage.getItem('ad-card-h') || '3'));
+  if (!ls.getItem('ad-theme')) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    ROOT.setAttribute('data-theme', prefersDark ? 'dark-midnight' : 'light-fog');
+  }
+  applyCardWidth(loadFloat('ad-card-w', 10));
+  applyCardHeight(loadFloat('ad-card-h', 3));
   buildTabs();
   renderTab(activeTab);
 

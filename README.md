@@ -45,7 +45,7 @@ aerodash/
 
 ## Options
 
-The `OPTIONS` button is at the bottom center of the page. Click it to reveal all settings. Everything is saved to `localStorage` and restored on page load.
+The options sit behind the gear icon in the top right corner of the page. Click it to reveal all settings. Everything is saved to `localStorage` and restored on page load.
 
 ## Icons
 
@@ -66,7 +66,7 @@ Icons are not distributed with Aerodash. The best places to find them are:
 
 All your content lives here. The structure is:
 
-- **Tabs** are pages. If you only have one page, the tab bar is hidden automatically.
+- **Tabs** are pages. If you only have one page, tab buttons are hidden.
 - **Groups** are collections of cards within a page, each with a name.
 - **Cards** are individual links that have a name, URL, and optional icon.
 - **Dividers** are optional visual separators between groups. Use `{ divider: true }` between any two groups.

@@ -1,3 +1,10 @@
+# 2026.03.20b
+* Replaced OPTIONS button with a gear icon, moved into the topbar alongside tabs.
+* Options flyout now opens downward from the gear, scrollable on short screens.
+* Adjusted spacing between cards and card groups.
+* First-time visitors now get dark or light theme automatically based on OS preference.
+* Various bug fixes.
+
 # 2026.03.20a
 * Changed wrapping behavior of tabs. They now wrap like card groups (mobile use improvement).
 * Adjusted vertical space of most items throughout the project. UI is now slightly more compact.
