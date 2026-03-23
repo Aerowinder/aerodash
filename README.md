@@ -1,10 +1,8 @@
 # Aerodash
 
-Aerodash is a clean, fast, self-hosted dashboard for your homelab, inspired by [Homepage](https://gethomepage.dev). Organize your apps and links into card groups across multiple tabs, choose between horizontal and vertical layouts, and pick from 12 carefully tuned themes; 6 dark and 6 light. Icons can be set per-item or disabled globally for a cleaner look. Stealth Mode hides card backgrounds and borders at rest, leaving only the content visible until you hover over it. Everything is highly configurable, including options like glow, grid, animations, card sizing, and more. All settings are saved across sessions. Your card config lives in `config.js` and is never directly modified by updates.
+Aerodash is a clean, fast, self-hosted homelab dashboard inspired by Homepage. Organize links into card groups across multiple tabs using extensive display and layout options.
 
-This project is vibe coded. The heavy lifting is done by LLMs with my oversight and extensive testing. It actually started as kind of a meme, to see how close I could get this dashboard to my previous setup with minimal prompting. To my surprise, the LLM got very close on the first try with an undetailed prompt, so I decided to take it further.
-
-> **Browser requirement:** Aerodash uses `color-mix()` for theming, which requires Chrome 111+, Firefox 113+, or Safari 16.2+.
+This project is vibe coded. The heavy lifting is done by LLMs with my oversight and extensive testing.
 
 ---
 
@@ -26,20 +24,19 @@ This project is vibe coded. The heavy lifting is done by LLMs with my oversight 
 aerodash/
 └── site/
     ├── index.html
-    ├── config.js          ← your config (gitignored)
+    ├── config.js          ← your config
     ├── config.example.js
-    └── icons/             ← your icons (gitignored)
+    └── icons/             ← your icons
         ├── jellyfin.svg
         ├── sonarr.svg
         └── ...
 ```
 
-1. Clone the repo: `git clone https://github.com/Aerowinder/aerodash` or `gh repo clone Aerowinder/aerodash`
+1. Clone the repo: `git clone https://github.com/Aerowinder/aerodash`
 2. Copy `/site/config.example.js` to `/site/config.js`
-3. Edit `/site/config.js` with your services, URLs, and icon paths
-4. Download icons from the links below and place them in `./site/icons/`. Favicons are also supported. This step is optional — icons can be hidden entirely if you prefer.
-5. Serve the `site/` folder from any web server (nginx, Apache, Caddy, etc.)
-6. Open it in your browser
+3. Populate `/site/config.js` with your services, URLs, and icon paths
+4. **OPTIONAL:** Download icons from the links below and place them in `./site/icons/`. Favicons are also supported.
+5. Serve the `site/` folder from any web server, or just run it directly from your computer
 
 ---
 
@@ -64,12 +61,7 @@ Icons are not distributed with Aerodash. The best places to find them are:
 
 ## config.js
 
-All your content lives here. The structure is:
-
-- **Tabs** are pages. If you only have one page, tab buttons are hidden.
-- **Groups** are collections of cards within a page, each with a name.
-- **Cards** are individual links that have a name, URL, and optional icon.
-- **Dividers** are optional visual separators between groups. Use `{ divider: true }` between any two groups.
+All your content lives here, structured as **Tabs** → **Groups** → **Cards**. Tabs are pages; if you only have one, the tab buttons are hidden. Groups are named collections of cards within a tab. Cards are individual links with a name, URL, and optional icon. Dividers are optional visual separators between groups, added with `{ divider: true }` between any two groups.
 
 A fully populated `config.example.js` is included in the repo. Here's a minimal example showing all the concepts:
 
@@ -123,8 +115,10 @@ const CONFIG = {
 
 ## Updating
 
-Since `/site/config.js` and `/site/icons/` are gitignored, pulling updates will never overwrite your data:
+Your config (`/site/config.js`) and icons (`/site/icons/`) will never be modified by updates. Pulling updates is as simple as:
 
 ```bash
 git pull
 ```
+
+Just refresh the browser page and you will be good to go!
