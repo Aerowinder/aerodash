@@ -1,4 +1,3 @@
 site/config.js
 site/icons/*
-!site/icons/.gitkeep
 !site/icons/aerodash.svg
