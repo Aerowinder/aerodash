@@ -117,7 +117,7 @@
     display: flex; flex-direction: column; gap: 0.45rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     opacity: 0; pointer-events: none; z-index: 200; min-width: 16rem; max-width: calc(100vw - 2rem);
-    max-height: 80vh; overflow-y: auto; overflow-x: auto; overscroll-behavior: contain;
+    max-height: 80vh; overflow: auto; overscroll-behavior: contain;
     transition: opacity 0.15s, transform 0.15s;
   }
   .options-flyout.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
@@ -231,6 +231,15 @@
   .flyout-header-title { flex: 1; }
   .flyout-header-link  { text-decoration: none; }
   .flyout-header-link:hover { color: var(--card-text); }
+
+  /* ── NARROW SCREENS ── */
+  @media (max-width: 600px) {
+    .topbar { flex-direction: column; padding: 0; align-items: center; }
+    .options-wrap { position: static; display: flex; flex-direction: column; align-items: center; width: 100%; order: -1; }
+    .topbar-tabs { width: 100%; }
+    .options-flyout { position: fixed; top: 3rem; right: auto; left: 50%; transform: translateX(-50%) translateY(-4px); }
+    .options-flyout.open { transform: translateX(-50%) translateY(0); }
+  }
 </style>
 
 <script>
@@ -284,7 +293,7 @@
 <script>
 
   // ── HELPERS ──
-  const VERSION = '2026.03.20c';
+  const VERSION = '2026.03.23a';
   const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
   const ls = (() => {
