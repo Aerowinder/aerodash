@@ -1,5 +1,5 @@
 # 2026.03.23a
-* On narrow screens (≤ 600px), the options gear icon moves to its own centered line above the tabs, and the options flyout opens centered on the screen instead of from the right edge. This will help prevent the scenario where the tab names can overlap the options gear.
+* On narrow screens (≤ 600px), the options gear icon moves to its own centered line above the tabs, and the options flyout opens centered on the screen instead of from the right edge. This will help prevent the scenario where the tab names can overlap the options gear. It will also help prevent the options panel from extending off the sides of the screen.
 
 # 2026.03.20c
 * Gear icon now stays pinned to the top right regardless of tab count or card width, preventing it from being pushed around by wrapping tabs.
