@@ -172,7 +172,7 @@
     width: var(--card-w); height: var(--card-h); padding: 0.6rem 0.75rem;
     background: var(--card-bg); border: 1px solid var(--muted);
     border-radius: 0.5rem; text-decoration: none; color: var(--card-text);
-    white-space: nowrap; overflow: hidden;
+    white-space: nowrap;
     transition: background 0.15s, border-color 0.15s;
   }
   .card-item:hover { background: var(--card-bghover); border-color: var(--base); }
@@ -243,29 +243,31 @@
 </style>
 
 <script>
-  // Apply saved settings before first paint to prevent flash
+  // Apply saved settings before first paint to prevent flash.
+  // Uses the same localStorage safety pattern as the main ls wrapper below.
   (function() {
     const h = document.documentElement;
-    try {
-      [
-        ['ad-theme',     'data-theme'],
-        ['ad-view',      'data-layout'],
-        ['ad-grid',      'data-grid'],
-        ['ad-glow',      'data-glow'],
-        ['ad-links',     'data-links'],
-        ['ad-icons',     'data-icons'],
-        ['ad-animation', 'data-anim'],
-        ['ad-stealth',   'data-stealth'],
-      ].forEach(([key, attr]) => {
-        const v = localStorage.getItem(key);
-        if (v) h.setAttribute(attr, v);
-      });
-    } catch(e) {}
+    const safe = (() => {
+      try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return localStorage; }
+      catch { return { getItem: () => null }; }
+    })();
+    [
+      ['ad-theme',     'data-theme'],
+      ['ad-view',      'data-layout'],
+      ['ad-grid',      'data-grid'],
+      ['ad-glow',      'data-glow'],
+      ['ad-links',     'data-links'],
+      ['ad-icons',     'data-icons'],
+      ['ad-animation', 'data-anim'],
+      ['ad-stealth',   'data-stealth'],
+    ].forEach(([key, attr]) => {
+      const v = safe.getItem(key);
+      if (v) h.setAttribute(attr, v);
+    });
     h.classList.add('no-transition');
     requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
   })();
 </script>
-<script src="./config.js"></script>
 </head>
 
 <body>
@@ -290,10 +292,9 @@
 
 </div>
 
+<script src="./config.js"></script>
 <script>
-
-  // ── HELPERS ──
-  const VERSION = '2026.03.23a';
+  const VERSION = '2026.03.24a';
   const ROOT    = document.documentElement;
   function el(tag, props) { return Object.assign(document.createElement(tag), props); }
   const ls = (() => {
@@ -329,12 +330,16 @@
     if (!groups?.length) return;
     const frag  = document.createDocumentFragment();
     const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
+    let animIndex = 0;
     groups.forEach(entry => {
       if (entry.divider) {
-        frag.appendChild(el('div', { className: 'card-divider' }));
+        const d = el('div', { className: 'card-divider' });
+        d.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
+        frag.appendChild(d);
         return;
       }
       const g    = el('div', { className: 'card-group' });
+      g.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
       const list = el('div', { className: 'card-list' });
       g.appendChild(el('div', { className: 'group-title', textContent: entry.name }));
       g.appendChild(list);
@@ -362,26 +367,27 @@
     topBarTabsEl.innerHTML = '';
     if (TABS.length <= 1) return;
     TABS.forEach((tab, i) => {
-      const isActive = i === activeTab;
-      const b = el('button', { className: 'tab-btn' + (isActive ? ' active' : ''), textContent: tab.name });
+      const b = el('button', { className: 'tab-btn' + (i === activeTab ? ' active' : ''), textContent: tab.name });
       b.onclick = () => switchTab(i);
       topBarTabsEl.appendChild(b);
     });
   }
 
   function switchTab(index) {
+    // Move .active class without rebuilding the tab bar
+    const buttons = topBarTabsEl.querySelectorAll('.tab-btn');
+    if (buttons.length) {
+      buttons[activeTab]?.classList.remove('active');
+      buttons[index]?.classList.add('active');
+    }
     activeTab = index;
     ls.setItem('ad-tab', index);
-    buildTabs();
     renderTab(index);
   }
 
   function renderTab(index) {
     cardGroupsEl.innerHTML = '';
     renderGroups((TABS[index] || TABS[0]).groups, cardGroupsEl);
-    cardGroupsEl.querySelectorAll('.card-group, .card-divider').forEach((g, i) => {
-      g.style.animationDelay = (0.04 + i * 0.04).toFixed(2) + 's';
-    });
     applyLayout();
   }
 
@@ -404,7 +410,6 @@
   let colTarget   = loadInt('ad-columns', 10);
   const GAP_HMODE = 0.375;
   const GAP_VMODE = 1.5;
-  const ROOT_FONT = parseFloat(getComputedStyle(document.documentElement).fontSize);
   const fmt       = v => parseFloat(v).toFixed(1);
 
   // ── THEMES ──
@@ -439,9 +444,10 @@
   }
 
   function applyLayout() {
+    const rootFont  = parseFloat(getComputedStyle(document.documentElement).fontSize); // read fresh — respects zoom changes
     const isH       = ROOT.getAttribute('data-layout') === 'horizontal';
     const gap       = isH ? GAP_HMODE : GAP_VMODE;
-    const availRem  = document.documentElement.clientWidth / ROOT_FONT - 3;
+    const availRem  = document.documentElement.clientWidth / rootFont - 3; // subtract 3rem: .wrapper left+right padding (1.5rem × 2)
     const fits      = Math.max(1, Math.floor((availRem + gap) / (CARD_W + gap)));
 
     let itemCap;
@@ -458,7 +464,7 @@
     }
 
     const cols = Math.min(colTarget, fits, itemCap);
-    contentEl.style.width = Math.round((cols * CARD_W + (cols - 1) * gap) * ROOT_FONT) + 'px';
+    contentEl.style.width = Math.round((cols * CARD_W + (cols - 1) * gap) * rootFont) + 'px';
   }
 
   let resizePending = false;

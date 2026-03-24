@@ -1,3 +1,6 @@
+# 2026.03.24a
+* Multiple performance optimizations.
+
 # 2026.03.23a
 * On narrow screens (≤ 600px), the options gear icon moves to its own centered line above the tabs, and the options flyout opens centered on the screen instead of from the right edge. This will help prevent the scenario where the tab names can overlap the options gear. It will also help prevent the options panel from extending off the sides of the screen.
 
@@ -7,7 +10,7 @@
 * Selected option button text is now always white for better contrast.
 
 # 2026.03.20b
-* Replaced OPTIONS button with a gear icon, moved into the topbar alongside tabs.
+* Replaced options button with a gear icon, moved into the topbar alongside tabs.
 * Options flyout now opens downward from the gear, scrollable on short screens.
 * Adjusted spacing between cards and card groups.
 * First-time visitors now get dark or light theme automatically based on OS preference.
@@ -27,11 +30,11 @@
 # 2026.03.18d
 * Theming overhauled (again) to make it easier to make changes to them in future. Change the base color and everything follows suit
 * Theme renames: Slate to Gray, Teal to Green, Rose to Red. Colors adjusted for these themes.
-* Added a medium glow level simnilar to the old high. Increased high glow significantly.
+* Added a medium glow level similar to the old high. Increased high glow significantly.
 
 # 2026.03.18c - BREAKING CHANGES
 * **BREAKING CHANGE**: `config.js` structure has changed. `cards` (the group container) is now `groups`, and `items` (individual links) is now `cards`. See the updated `config.example.js` and readme for the new structure.
-* Version and GitHub link moved into the OPTIONS flyout header.
+* Version and GitHub link moved into the options flyout header.
 * Various code cleanup and optimizations.
 
 # 2026.03.18b
@@ -42,7 +45,7 @@
 
 # 2026.03.18a
 * Updated light theme color swatches to be more visible.
-* Changed icon behavior. Instead of diplaying a `?` if an icon fails to load, the card will be shown without the spacing for an icon. You can utilize this feature if you want only some cards to not have an icon. The readme explains how to accomplish this task.
+* Changed icon behavior. Instead of displaying a `?` if an icon fails to load, the card will be shown without the spacing for an icon. You can utilize this feature if you want only some cards to not have an icon. The readme explains how to accomplish this task.
 * Unified font size across main page.
 * Fixed card group titles being forced uppercase. Will now accept whatever case you specify in `config.js`.
 * Continued optimization passes.
