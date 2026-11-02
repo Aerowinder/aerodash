@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.01
+* Added a theme **Mode** option: system, dark, or light. You can now pick one dark theme and one light theme, and in system mode Aerodash switches between them automatically to match your OS, even while the page is open. Your existing theme choice carries over.
+* The options panel now stays open while you change settings, instead of closing after every click.
+* Light-mode users no longer see a brief flash of the dark theme when the page loads.
+* The tab bar and gear icon no longer shift around when switching between tabs. The page width is now sized to fit your largest tab.
+* Card animations are now disabled when your OS has "reduce motion" enabled.
+* Page text now scales with your browser's default font size setting.
+* Improved keyboard and screen reader support: the closed options panel can no longer be tabbed into, Escape returns focus to the gear icon, and buttons, sliders, and swatches are properly labeled.
+* Inactive tab names are easier to read.
+* Switching links between new tab and same tab no longer reloads the cards.
+* The configuration error banner now says what went wrong, and a malformed entry in `config.js` no longer blanks the whole page.
+* Raised the minimum card height to 1.5, since smaller values had no visible effect.
+
 ## 1.00
 * Changed versioning from caldate to semantic. No other differences from 2026.03.24a.
 

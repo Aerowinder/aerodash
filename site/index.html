@@ -10,14 +10,10 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :focus-visible { outline: 2px solid var(--base); outline-offset: 2px; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .card-group, .card-divider { animation: none; opacity: 1; transform: none; }
-    *, *::before, *::after { transition-duration: 0.01ms !important; }
-  }
   button { font-family: inherit; }
   .no-transition *, .no-transition *::before, .no-transition *::after { transition: none !important; }
 
-  html { font-size: 20px; }
+  html { font-size: 125%; }
 
   /* ── THEMES ── */
   :root,
@@ -92,7 +88,7 @@
   .tab-btn {
     background: none; border: none; cursor: pointer;
     font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap;
-    color: var(--muted); opacity: 0.7; padding: 0.2rem 0.4rem; border-radius: 0.25rem;
+    color: var(--muted); opacity: 0.85; padding: 0.2rem 0.4rem; border-radius: 0.25rem;
     transition: color 0.15s, opacity 0.15s;
   }
   .tab-btn:hover  { color: var(--hover-text); opacity: 1; }
@@ -143,6 +139,7 @@
   }
   .swatch:hover                        { transform: scale(1.2); }
   .swatch.active { border-color: var(--hover-text); }
+  .opt-row.dimmed .opt-label { opacity: 0.4; } /* swatch row not currently in use */
 
   /* ── OPTION BUTTONS ── */
   .pal-btn {
@@ -215,6 +212,12 @@
   [data-anim="off"] .card-group,
   [data-anim="off"] .card-divider { animation: none; opacity: 1; transform: none; }
 
+  /* Must come after the animation rules above to override them. */
+  @media (prefers-reduced-motion: reduce) {
+    .card-group, .card-divider { animation: none; opacity: 1; transform: none; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
+
   /* ── CONFIG ERROR ── */
   .config-error {
     display: none;
@@ -243,176 +246,7 @@
 </style>
 
 <script>
-  // Apply saved settings before first paint to prevent flash.
-  // Uses the same localStorage safety pattern as the main ls wrapper below.
-  (function() {
-    const h = document.documentElement;
-    const safe = (() => {
-      try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return localStorage; }
-      catch { return { getItem: () => null }; }
-    })();
-    [
-      ['ad-theme',     'data-theme'],
-      ['ad-view',      'data-layout'],
-      ['ad-grid',      'data-grid'],
-      ['ad-glow',      'data-glow'],
-      ['ad-links',     'data-links'],
-      ['ad-icons',     'data-icons'],
-      ['ad-animation', 'data-anim'],
-      ['ad-stealth',   'data-stealth'],
-    ].forEach(([key, attr]) => {
-      const v = safe.getItem(key);
-      if (v) h.setAttribute(attr, v);
-    });
-    h.classList.add('no-transition');
-    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
-  })();
-</script>
-</head>
-
-<body>
-<div class="glow"></div>
-<div class="wrapper">
-
-  <div class="content" id="content">
-    <div class="topbar" id="topBar">
-      <div class="topbar-tabs" id="topBarTabs"></div>
-      <div class="options-wrap">
-        <button class="options-btn" id="optionsBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-        </button>
-        <div class="options-flyout" id="optionsFlyout"></div>
-      </div>
-    </div>
-    <div class="card-groups" id="cardGroups"></div>
-    <div id="configError" class="config-error"></div>
-  </div>
-
-</div>
-
-<script src="./config.js"></script>
-<script>
-  const VERSION = '1.00';
-  const ROOT    = document.documentElement;
-  function el(tag, props) { return Object.assign(document.createElement(tag), props); }
-  const ls = (() => {
-    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return localStorage; }
-    catch { return { getItem: () => null, setItem: () => {}, removeItem: () => {} }; }
-  })();
-
-  // ── DOM REFS ──
-  const cardGroupsEl  = document.getElementById('cardGroups');
-  const contentEl     = document.getElementById('content');
-  const topBarTabsEl  = document.getElementById('topBarTabs');
-  const optionsBtnEl  = document.getElementById('optionsBtn');
-  const optionsFlyEl  = document.getElementById('optionsFlyout');
-  const configErrorEl = document.getElementById('configError');
-
-  // ── CONFIG ──
-  let TABS;
-  try {
-    if (typeof CONFIG === 'undefined') throw new Error('config.js failed to load. Ensure the file exists and is free of syntax errors.');
-    TABS = CONFIG.tabs;
-    if (!TABS?.length) throw new Error('CONFIG.tabs is missing or empty.');
-  } catch (e) {
-    console.warn('Aerodash:', e.message);
-    TABS = [{ name: 'Home', groups: [] }];
-    configErrorEl.innerHTML = '⚠ Aerodash couldn\'t load your configuration. Please ensure config.js exists and is free of syntax errors. If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.';
-    configErrorEl.style.display = 'block';
-  }
-
-  // ── TABS ──
-  let activeTab = Math.max(0, Math.min(parseInt(ls.getItem('ad-tab'), 10) || 0, TABS.length - 1));
-
-  function renderGroups(groups, container) {
-    if (!groups?.length) return;
-    const frag  = document.createDocumentFragment();
-    const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
-    let animIndex = 0;
-    groups.forEach(entry => {
-      if (entry.divider) {
-        const d = el('div', { className: 'card-divider' });
-        d.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
-        frag.appendChild(d);
-        return;
-      }
-      const g    = el('div', { className: 'card-group' });
-      g.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
-      const list = el('div', { className: 'card-list' });
-      g.appendChild(el('div', { className: 'group-title', textContent: entry.name }));
-      g.appendChild(list);
-      (entry.cards || []).forEach(({ name, url, icon }) => {
-        if (!name) return; // skip nameless cards
-        const href = url || '#'; // missing url defaults to '#'
-        // icon is optional — missing or failed icons are already handled gracefully
-        const a = el('a', { href: href, className: 'card-item', target: isNew ? '_blank' : '_self', rel: isNew ? 'noopener noreferrer' : '' });
-        if (icon) {
-          const iconDiv = el('div', { className: 'card-icon' });
-          const img = el('img', { src: icon, alt: '', loading: 'lazy' });
-          img.onerror = function() { this.onerror = null; iconDiv.remove(); };
-          iconDiv.appendChild(img);
-          a.appendChild(iconDiv);
-        }
-        a.appendChild(el('span', { className: 'card-name', textContent: name }));
-        list.appendChild(a);
-      });
-      frag.appendChild(g);
-    });
-    container.appendChild(frag);
-  }
-
-  function buildTabs() {
-    topBarTabsEl.innerHTML = '';
-    if (TABS.length <= 1) return;
-    TABS.forEach((tab, i) => {
-      const b = el('button', { className: 'tab-btn' + (i === activeTab ? ' active' : ''), textContent: tab.name });
-      b.onclick = () => switchTab(i);
-      topBarTabsEl.appendChild(b);
-    });
-  }
-
-  function switchTab(index) {
-    // Move .active class without rebuilding the tab bar
-    const buttons = topBarTabsEl.querySelectorAll('.tab-btn');
-    if (buttons.length) {
-      buttons[activeTab]?.classList.remove('active');
-      buttons[index]?.classList.add('active');
-    }
-    activeTab = index;
-    ls.setItem('ad-tab', index);
-    renderTab(index);
-  }
-
-  function renderTab(index) {
-    cardGroupsEl.innerHTML = '';
-    renderGroups((TABS[index] || TABS[0]).groups, cardGroupsEl);
-    applyLayout();
-  }
-
-  // ── LAYOUT ──
-  //
-  // GAP_HMODE must match `.card-list { gap }` in horizontal mode.
-  // GAP_VMODE must match `.card-groups { gap }` in vertical mode.
-  // If any CSS value changes, update the corresponding JS constant.
-  //
-  function loadFloat(key, fallback) {
-    const v = parseFloat(ls.getItem(key));
-    return Number.isFinite(v) ? v : fallback;
-  }
-  function loadInt(key, fallback) {
-    const v = parseInt(ls.getItem(key), 10);
-    return Number.isFinite(v) ? v : fallback;
-  }
-
-  let CARD_W      = loadFloat('ad-card-w', 10);
-  let colTarget   = loadInt('ad-columns', 10);
-  const GAP_HMODE = 0.375;
-  const GAP_VMODE = 1.5;
-  const fmt       = v => parseFloat(v).toFixed(1);
-
-  // ── THEMES ──
+  // ── THEMES ── (defined here so saved themes can be validated before first paint)
   const THEMES = {
     dark: [
       { id: 'dark-midnight',  color: '#2e3a52', label: 'Midnight'  },
@@ -432,6 +266,235 @@
     ]
   };
 
+  // localStorage wrapper that degrades to a no-op when storage is unavailable.
+  // Shared with the main script below.
+  const ls = (() => {
+    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); return localStorage; }
+    catch { return { getItem: () => null, setItem: () => {}, removeItem: () => {} }; }
+  })();
+
+  // Theme state: a mode (system/dark/light) plus one remembered pick per row.
+  // Falls back to the pre-1.01 single 'ad-theme' key so existing users keep their theme.
+  const DARK_MQ = matchMedia('(prefers-color-scheme: dark)');
+  function loadThemePrefs() {
+    const ids      = g => THEMES[g].map(t => t.id);
+    const old      = ls.getItem('ad-theme');
+    const oldGroup = ['dark', 'light'].find(g => ids(g).includes(old));
+    const pick     = (g, fallback) => {
+      const v = ls.getItem('ad-theme-' + g);
+      return ids(g).includes(v) ? v : (oldGroup === g ? old : fallback);
+    };
+    const mode = ls.getItem('ad-theme-mode');
+    return {
+      mode:  ['system', 'dark', 'light'].includes(mode) ? mode : (oldGroup || 'system'),
+      dark:  pick('dark',  'dark-midnight'),
+      light: pick('light', 'light-fog'),
+    };
+  }
+  function resolveTheme(p) {
+    return p[p.mode === 'system' ? (DARK_MQ.matches ? 'dark' : 'light') : p.mode];
+  }
+  const themePrefs = loadThemePrefs();
+
+  // Apply saved settings before first paint to prevent flash.
+  (function() {
+    const h = document.documentElement;
+    h.setAttribute('data-theme', resolveTheme(themePrefs));
+    // [localStorage key, html attribute, allowed values] — unknown values (e.g. from old versions) are ignored
+    [
+      ['ad-view',      'data-layout',  ['horizontal', 'vertical']],
+      ['ad-grid',      'data-grid',    ['off', 'on']],
+      ['ad-glow',      'data-glow',    ['off', 'low', 'med', 'high']],
+      ['ad-links',     'data-links',   ['new', 'same']],
+      ['ad-icons',     'data-icons',   ['off', 'on']],
+      ['ad-animation', 'data-anim',    ['off', 'on']],
+      ['ad-stealth',   'data-stealth', ['off', 'on']],
+    ].forEach(([key, attr, allowed]) => {
+      const v = ls.getItem(key);
+      if (allowed.includes(v)) h.setAttribute(attr, v);
+    });
+    h.classList.add('no-transition');
+    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transition')));
+  })();
+</script>
+</head>
+
+<body>
+<div class="glow"></div>
+<div class="wrapper">
+
+  <div class="content" id="content">
+    <div class="topbar" id="topBar">
+      <div class="topbar-tabs" id="topBarTabs"></div>
+      <div class="options-wrap">
+        <button class="options-btn" id="optionsBtn" aria-label="Options" aria-expanded="false" aria-controls="optionsFlyout">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+        <div class="options-flyout" id="optionsFlyout" inert></div>
+      </div>
+    </div>
+    <div class="card-groups" id="cardGroups"></div>
+    <div id="configError" class="config-error"></div>
+  </div>
+
+</div>
+
+<script src="./config.js"></script>
+<script>
+  const VERSION = '1.01';
+  const ROOT    = document.documentElement;
+  function el(tag, props) { return Object.assign(document.createElement(tag), props); }
+  const isObj = v => v !== null && typeof v === 'object';
+
+  // ── DOM REFS ──
+  const cardGroupsEl  = document.getElementById('cardGroups');
+  const contentEl     = document.getElementById('content');
+  const topBarTabsEl  = document.getElementById('topBarTabs');
+  const optionsBtnEl  = document.getElementById('optionsBtn');
+  const optionsFlyEl  = document.getElementById('optionsFlyout');
+  const configErrorEl = document.getElementById('configError');
+
+  // ── CONFIG ──
+  // Normalized so the rest of the code can assume: every tab has a groups array,
+  // every group is a divider or has a cards array, and every card has a name.
+  let TABS;
+  try {
+    if (typeof CONFIG === 'undefined') throw new Error('config.js is missing or contains a syntax error.');
+    TABS = (Array.isArray(CONFIG.tabs) ? CONFIG.tabs : []).filter(isObj).map(tab => ({
+      name:   tab.name,
+      groups: (Array.isArray(tab.groups) ? tab.groups : []).filter(isObj).map(g => g.divider ? g : {
+        name:  g.name,
+        cards: (Array.isArray(g.cards) ? g.cards : []).filter(c => isObj(c) && c.name), // skip nameless cards
+      }),
+    }));
+    if (!TABS.length) throw new Error('CONFIG.tabs is missing or empty.');
+  } catch (e) {
+    console.warn('Aerodash:', e.message);
+    TABS = [{ name: 'Home', groups: [] }];
+    configErrorEl.innerHTML = '⚠ Aerodash couldn\'t load your configuration: <span></span> If issues persist, check the <a href="https://github.com/Aerowinder/aerodash/blob/main/README.md" target="_blank" rel="noopener noreferrer">readme</a> or <a href="https://github.com/Aerowinder/aerodash/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.';
+    configErrorEl.querySelector('span').textContent = e.message;
+    configErrorEl.style.display = 'block';
+  }
+
+  // ── TABS ──
+  let activeTab = Math.max(0, Math.min(parseInt(ls.getItem('ad-tab'), 10) || 0, TABS.length - 1));
+
+  function linkAttrs() {
+    const isNew = (ROOT.getAttribute('data-links') || 'new') === 'new';
+    return { target: isNew ? '_blank' : '_self', rel: isNew ? 'noopener noreferrer' : '' };
+  }
+
+  function applyLinkTargets() {
+    const attrs = linkAttrs();
+    cardGroupsEl.querySelectorAll('.card-item').forEach(a => Object.assign(a, attrs));
+  }
+
+  function renderGroups(groups, container) {
+    if (!groups.length) return;
+    const frag  = document.createDocumentFragment();
+    const attrs = linkAttrs();
+    let animIndex = 0;
+    groups.forEach(entry => {
+      if (entry.divider) {
+        const d = el('div', { className: 'card-divider' });
+        d.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
+        frag.appendChild(d);
+        return;
+      }
+      const g    = el('div', { className: 'card-group' });
+      g.style.animationDelay = (0.04 + animIndex++ * 0.04).toFixed(2) + 's';
+      const list = el('div', { className: 'card-list' });
+      g.appendChild(el('div', { className: 'group-title', textContent: entry.name }));
+      g.appendChild(list);
+      entry.cards.forEach(({ name, url, icon }) => {
+        const href = url || '#'; // missing url defaults to '#'
+        // icon is optional — missing or failed icons are already handled gracefully
+        const a = el('a', { href: href, className: 'card-item', ...attrs });
+        if (icon) {
+          const iconDiv = el('div', { className: 'card-icon' });
+          const img = el('img', { src: icon, alt: '', loading: 'lazy' });
+          img.onerror = function() { this.onerror = null; iconDiv.remove(); };
+          iconDiv.appendChild(img);
+          a.appendChild(iconDiv);
+        }
+        a.appendChild(el('span', { className: 'card-name', textContent: name }));
+        list.appendChild(a);
+      });
+      frag.appendChild(g);
+    });
+    container.appendChild(frag);
+  }
+
+  function setTabActive(btn, on) {
+    btn.classList.toggle('active', on);
+    if (on) btn.setAttribute('aria-current', 'page');
+    else btn.removeAttribute('aria-current');
+  }
+
+  function buildTabs() {
+    topBarTabsEl.innerHTML = '';
+    if (TABS.length <= 1) return;
+    TABS.forEach((tab, i) => {
+      const b = el('button', { className: 'tab-btn', textContent: tab.name });
+      setTabActive(b, i === activeTab);
+      b.onclick = () => switchTab(i);
+      topBarTabsEl.appendChild(b);
+    });
+  }
+
+  function switchTab(index) {
+    if (index === activeTab) return;
+    // Move .active class without rebuilding the tab bar
+    const buttons = topBarTabsEl.querySelectorAll('.tab-btn');
+    if (buttons[activeTab]) setTabActive(buttons[activeTab], false);
+    if (buttons[index])     setTabActive(buttons[index], true);
+    activeTab = index;
+    ls.setItem('ad-tab', index);
+    renderTab(index);
+  }
+
+  function renderTab(index) {
+    cardGroupsEl.innerHTML = '';
+    renderGroups((TABS[index] || TABS[0]).groups, cardGroupsEl);
+  }
+
+  // ── LAYOUT ──
+  //
+  // GAP_HMODE must match `.card-list { gap }` in horizontal mode.
+  // GAP_VMODE must match `.card-groups { gap }` in vertical mode.
+  // If any CSS value changes, update the corresponding JS constant.
+  //
+  function loadFloat(key, fallback, min, max) {
+    const v = parseFloat(ls.getItem(key));
+    return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+  }
+  function loadInt(key, fallback, min, max) {
+    const v = parseInt(ls.getItem(key), 10);
+    return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+  }
+
+  let CARD_W      = loadFloat('ad-card-w', 10, 5, 20);
+  let CARD_H      = loadFloat('ad-card-h', 3, 1.5, 5);
+  let colTarget   = loadInt('ad-columns', 10, 1, 20);
+  const GAP_HMODE = 0.375;
+  const GAP_VMODE = 1.5;
+  const fmt       = v => parseFloat(v).toFixed(1);
+
+  // Column caps are taken across all tabs, not just the active one, so the
+  // content width (and the tab bar inside it) doesn't jump when switching tabs.
+  // Horizontal: most cards in any group. Vertical: most groups between dividers.
+  const CAP_H = Math.max(0, ...TABS.flatMap(t => t.groups.map(g => g.divider ? 0 : g.cards.length))) || Infinity;
+  const CAP_V = Math.max(0, ...TABS.map(t => {
+    let max = 0, run = 0;
+    for (const g of t.groups) {
+      if (g.divider) { max = Math.max(max, run); run = 0; }
+      else run++;
+    }
+    return Math.max(max, run);
+  })) || Infinity;
+
   function applyCardWidth(w) {
     CARD_W = w;
     ROOT.style.setProperty('--card-w', w + 'rem');
@@ -439,6 +502,7 @@
   }
 
   function applyCardHeight(h) {
+    CARD_H = h;
     ROOT.style.setProperty('--card-h', h + 'rem');
     ls.setItem('ad-card-h', h);
   }
@@ -449,21 +513,7 @@
     const gap       = isH ? GAP_HMODE : GAP_VMODE;
     const availRem  = document.documentElement.clientWidth / rootFont - 3; // subtract 3rem: .wrapper left+right padding (1.5rem × 2)
     const fits      = Math.max(1, Math.floor((availRem + gap) / (CARD_W + gap)));
-
-    let itemCap;
-    if (isH) {
-      const lists = cardGroupsEl.querySelectorAll('.card-list');
-      itemCap = lists.length ? Math.max(...Array.from(lists, l => l.children.length)) : Infinity;
-    } else {
-      let max = 0, run = 0;
-      for (const c of cardGroupsEl.children) {
-        if (c.classList.contains('card-divider')) { max = Math.max(max, run); run = 0; }
-        else if (c.classList.contains('card-group')) { run++; }
-      }
-      itemCap = Math.max(max, run) || colTarget;
-    }
-
-    const cols = Math.min(colTarget, fits, itemCap);
+    const cols      = Math.min(colTarget, fits, isH ? CAP_H : CAP_V);
     contentEl.style.width = Math.round((cols * CARD_W + (cols - 1) * gap) * rootFont) + 'px';
   }
 
@@ -476,23 +526,45 @@
   });
 
   // ── OPTIONS PANEL ──
-  function applyTheme(id) {
-    ROOT.setAttribute('data-theme', id);
-    ls.setItem('ad-theme', id);
+  // Built once; clicks update the active state in place so the panel stays open
+  // and keyboard focus stays on the clicked control.
+  function setPressed(btn, on) {
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on);
   }
+
+  // Replaced by buildOptions() with a function that syncs the theme controls.
+  let refreshThemeUI = () => {};
+
+  function applyTheme() {
+    ROOT.setAttribute('data-theme', resolveTheme(themePrefs));
+    refreshThemeUI();
+  }
+
+  function saveTheme() {
+    ls.setItem('ad-theme-mode',  themePrefs.mode);
+    ls.setItem('ad-theme-dark',  themePrefs.dark);
+    ls.setItem('ad-theme-light', themePrefs.light);
+    applyTheme();
+  }
+
+  // In system mode, follow OS light/dark changes live.
+  DARK_MQ.addEventListener('change', () => { if (themePrefs.mode === 'system') applyTheme(); });
 
   function optRow(label, values, active, attr, key, extra) {
     const row = el('div', { className: 'opt-row' });
     row.appendChild(el('span', { className: 'opt-label', textContent: label }));
-    values.forEach(([display, value]) => {
-      const b = el('button', { className: 'pal-btn' + (active === value ? ' active' : ''), textContent: display });
+    const buttons = values.map(([display, value]) => {
+      const b = el('button', { className: 'pal-btn', textContent: display });
+      setPressed(b, active === value);
       b.onclick = () => {
         ROOT.setAttribute(attr, value);
         ls.setItem(key, value);
+        buttons.forEach(o => setPressed(o, o === b));
         if (extra) extra();
-        buildOptions();
       };
       row.appendChild(b);
+      return b;
     });
     return row;
   }
@@ -502,6 +574,7 @@
     const slider = el('input', { type: 'range', ...opts, className: 'opt-slider' });
     const fmtFn  = fmtLabel || fmt;
     const lbl    = el('span',  { className: 'opt-val-label', textContent: fmtFn(opts.value) });
+    slider.setAttribute('aria-label', label);
     slider.oninput  = () => { lbl.textContent = fmtFn(slider.value); };
     slider.onchange = () => { lbl.textContent = fmtFn(slider.value); onChange(slider.value); };
     row.appendChild(el('span', { className: 'opt-label', textContent: label }));
@@ -517,8 +590,6 @@
   }
 
   function buildOptions() {
-    const theme = ROOT.getAttribute('data-theme') || 'dark-midnight';
-    const cardH = loadFloat('ad-card-h', 3);
     optionsFlyEl.innerHTML = '';
 
     // HEADER
@@ -529,24 +600,52 @@
 
     // THEME
     const themeSection = section('THEME', true);
-    ['dark', 'light'].forEach(group => {
+    const modeRow = el('div', { className: 'opt-row' });
+    modeRow.appendChild(el('span', { className: 'opt-label', textContent: 'MODE' }));
+    const modeBtns = ['system', 'dark', 'light'].map(mode => {
+      const b = el('button', { className: 'pal-btn', textContent: mode });
+      b.onclick = () => { themePrefs.mode = mode; saveTheme(); };
+      modeRow.appendChild(b);
+      return [mode, b];
+    });
+    themeSection.appendChild(modeRow);
+
+    const swatchRows = ['dark', 'light'].map(group => {
       const row = el('div', { className: 'opt-row' });
       row.appendChild(el('span', { className: 'opt-label', textContent: group.toUpperCase() }));
       const swatchRow = el('div', { className: 'swatch-row' });
-      THEMES[group].forEach(t => {
-        const s = el('button', { className: 'swatch' + (t.id === theme ? ' active' : ''), title: t.label });
+      const swatches = THEMES[group].map(t => {
+        const s = el('button', { className: 'swatch', title: t.label });
+        s.setAttribute('aria-label', t.label);
         s.style.background = t.color;
-        s.onclick = () => { applyTheme(t.id); buildOptions(); };
+        s.onclick = () => {
+          themePrefs[group] = t.id;
+          // Picking from the other row in a fixed mode switches to it, so the click is visible.
+          if (themePrefs.mode !== 'system') themePrefs.mode = group;
+          saveTheme();
+        };
         swatchRow.appendChild(s);
+        return [t.id, s];
       });
       row.appendChild(swatchRow);
       themeSection.appendChild(row);
+      return [group, row, swatches];
     });
     optionsFlyEl.appendChild(themeSection);
 
+    refreshThemeUI = () => {
+      const current = ROOT.getAttribute('data-theme');
+      modeBtns.forEach(([mode, b]) => setPressed(b, mode === themePrefs.mode));
+      swatchRows.forEach(([group, row, swatches]) => {
+        row.classList.toggle('dimmed', !current.startsWith(group));
+        swatches.forEach(([id, s]) => setPressed(s, id === themePrefs[group]));
+      });
+    };
+    refreshThemeUI();
+
     // MISC
     const misc = section('MISC');
-    misc.appendChild(optRow('LINKS', [['new tab','new'],['same tab','same']], ROOT.getAttribute('data-links') || 'new', 'data-links', 'ad-links', () => renderTab(activeTab)));
+    misc.appendChild(optRow('LINKS', [['new tab','new'],['same tab','same']], ROOT.getAttribute('data-links') || 'new', 'data-links', 'ad-links', applyLinkTargets));
     optionsFlyEl.appendChild(misc);
 
     // DISPLAY
@@ -564,47 +663,43 @@
     layout.appendChild(sliderRow('COLUMNS', { min: 1, max: 20, value: colTarget, step: 1 }, v => { colTarget = parseInt(v, 10); ls.setItem('ad-columns', colTarget); applyLayout(); }));
     // Height slider uses integer internals (value × 2) to avoid browser float
     // snap ambiguity with fractional min/step values.
-    layout.appendChild(sliderRow('HEIGHT', { min: 2, max: 10, value: Math.round(cardH * 2), step: 1 }, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
+    layout.appendChild(sliderRow('HEIGHT', { min: 3, max: 10, value: Math.round(CARD_H * 2), step: 1 }, v => { applyCardHeight(parseInt(v, 10) / 2); }, v => fmt(parseInt(v, 10) / 2)));
     // Same integer trick as height.
     layout.appendChild(sliderRow('WIDTH', { min: 10, max: 40, value: Math.round(CARD_W * 2), step: 1 }, v => { applyCardWidth(parseInt(v, 10) / 2); applyLayout(); }, v => fmt(parseInt(v, 10) / 2)));
     optionsFlyEl.appendChild(layout);
   }
 
-  function closeOptions() {
-    optionsFlyEl.classList.remove('open');
+  // Closed flyout is inert so its hidden controls can't be reached with Tab.
+  function setOptionsOpen(open) {
+    optionsFlyEl.classList.toggle('open', open);
+    optionsFlyEl.inert = !open;
+    optionsBtnEl.setAttribute('aria-expanded', open);
   }
 
-  function toggleOptions(e) {
+  optionsBtnEl.addEventListener('click', e => {
     e.stopPropagation();
-    if (optionsFlyEl.classList.contains('open')) {
-      closeOptions();
-      return;
-    }
-    buildOptions();
-    optionsFlyEl.classList.add('open');
-  }
-
-  optionsBtnEl.addEventListener('click', toggleOptions);
+    setOptionsOpen(!optionsFlyEl.classList.contains('open'));
+  });
 
   document.addEventListener('click', e => {
     if (!e.target.closest('.options-wrap'))
-      closeOptions();
+      setOptionsOpen(false);
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && optionsFlyEl.classList.contains('open'))
-      closeOptions();
+    if (e.key === 'Escape' && optionsFlyEl.classList.contains('open')) {
+      setOptionsOpen(false);
+      optionsBtnEl.focus();
+    }
   });
 
   // ── INIT ──
-  if (!ls.getItem('ad-theme')) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    ROOT.setAttribute('data-theme', prefersDark ? 'dark-midnight' : 'light-fog');
-  }
-  applyCardWidth(loadFloat('ad-card-w', 10));
-  applyCardHeight(loadFloat('ad-card-h', 3));
+  applyCardWidth(CARD_W);
+  applyCardHeight(CARD_H);
   buildTabs();
   renderTab(activeTab);
+  applyLayout();
+  buildOptions();
 
 </script>
 </body>

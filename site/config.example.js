@@ -7,7 +7,7 @@ const CONFIG = {
         {
           name: 'Media',
           cards: [
-            { name: 'Jellyfin',       url: '', icon: './icons/jellyfin.svg' },
+            { name: 'Jellyfin',       url: '#', icon: './icons/jellyfin.svg' },
             { name: 'Sonarr',         url: '#', icon: './icons/sonarr.svg' },
             { name: 'Radarr',         url: '#', icon: './icons/radarr.svg' },
             { name: 'Navidrome',      url: '#', icon: './icons/navidrome.svg' },

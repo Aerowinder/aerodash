@@ -42,7 +42,9 @@ aerodash/
 
 ## Options
 
-The options sit behind the gear icon in the top right corner of the page. Click it to reveal all settings. Everything is saved to `localStorage` and restored on page load.
+The options sit behind the gear icon in the top right corner of the page. Click it to reveal all settings; click outside the panel or press Escape to close it. Everything is saved to `localStorage` and restored on page load.
+
+**Theme mode:** choose one dark theme and one light theme, then set the mode to **system** to switch between them automatically with your OS light/dark setting, or to **dark** / **light** to always use one. New visitors start in system mode with Midnight and Fog.
 
 ## Icons
 
@@ -62,6 +64,12 @@ Icons are not distributed with Aerodash. The best places to find them are:
 ## config.js
 
 All your content lives here, structured as **Tabs** → **Groups** → **Cards**. Tabs are pages; if you only have one, the tab buttons are hidden. Groups are named collections of cards within a tab. Cards are individual links with a name, URL, and optional icon. Dividers are optional visual separators between groups, added with `{ divider: true }` between any two groups.
+
+- A card's `name` is required; cards without one are skipped.
+- A card's `url` is optional and defaults to `#` (a link back to the dashboard itself).
+- A card's `icon` is optional; leave it out to show the card without an icon.
+
+The page width is set by your largest tab, so it stays the same when switching tabs. If `config.js` has a problem, a banner on the page will describe it.
 
 A fully populated `config.example.js` is included in the repo. Here's a minimal example showing all the concepts:
 
